@@ -52,7 +52,7 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
    </section>
    <section class="card"><div class="tabs"><button class="tab active" onclick="tab('docs',this)">Dokumentasi</button><button class="tab" onclick="tab('history',this)">Riwayat</button><button class="tab" onclick="tab('accounts',this)">Akun perangkat</button></div>
     <div id="docsTab" class="docs"><div class="subhead"><h3>Foto dan dokumen pendukung</h3><button class="btn small" onclick="openDoc()">＋ Tambah berkas</button></div><div id="docgrid" class="docgrid"></div><div class="tiny" style="margin-top:12px">Pada versi produksi, file disimpan di storage privat dan hanya dapat diakses oleh petugas yang berwenang.</div></div>
-    <div id="historyTab" class="docs hidden"><h3 style="margin-top:0">Riwayat administrasi</h3><div class="vaultrow"><div class="vaultico">✓</div><div><b>Pemeriksaan inventaris</b><small>2026-10-01 · Petugas Inventaris</small></div><span class="pill good">Selesai</span></div><div class="vaultrow"><div class="vaultico">↔</div><div><b>Verifikasi penanggung jawab</b><small>2026-09-12 · Admin SIMATEL</small></div><span class="pill blue">Tercatat</span></div><div class="tiny">Riwayat ini contoh; audit produksi harus dibuat di server dan tidak dapat diubah oleh pengguna biasa.</div></div>
+    <div id="historyTab" class="docs hidden"><div class="subhead"><h3 style="margin-top:0">Riwayat perubahan perangkat</h3><button class="btn small" onclick="loadDeviceHistory()">↻ Muat ulang</button></div><div id="historyRows"><div class="tiny">Riwayat perubahan akan tampil setelah tabel audit disiapkan di Supabase.</div></div><div class="tiny">Riwayat dicatat otomatis oleh database. Pengguna aplikasi tidak dapat mengedit atau menghapus catatan ini.</div></div>
     <div id="accountsTab" class="docs hidden"><div class="subhead"><h3>Referensi akun perangkat</h3><span class="pill warn">Akses terbatas</span></div><div class="vaultrow"><div class="vaultico">🔐</div><div><b id="acctName">Akun masuk perangkat</b><small>Username: <span id="acctUser">contoh.user</span></small><small>Password: tidak ditampilkan di inventaris</small></div><button class="btn small" onclick="toast('Demo: akses kredensial memerlukan autentikasi ulang dan otorisasi khusus.')">Minta akses</button></div><div class="notice">Password tidak disimpan pada tabel inventaris. Pada implementasi produksi, simpan rahasia di password vault yang disetujui instansi; SIMATEL hanya menyimpan ID referensi. Akses harus dibatasi dan diaudit.</div></div>
    </section>
   </div>
@@ -239,7 +239,30 @@ window.downloadDoc=async path=>{
   openPreview(data.signedUrl,name,["jpg","jpeg","png","webp","gif"].includes(ext),ext);
 };
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePreview()});
-function tab(name,el){["docs","history","accounts"].forEach(n=>$(n+"Tab").classList.toggle("hidden",n!==name));document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));if(el)el.classList.add("active")}
+function tab(name,el){["docs","history","accounts"].forEach(n=>$(n+"Tab").classList.toggle("hidden",n!==name));document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));if(el)el.classList.add("active");if(name==="history")loadDeviceHistory()}
+async function loadDeviceHistory(){
+  const host=$("historyRows");
+  if(!host)return;
+  if(!db||!current){host.innerHTML='<div class="tiny">Pilih perangkat untuk melihat riwayat.</div>';return}
+  host.innerHTML='<div class="tiny">Memuat riwayat...</div>';
+  const {data,error}=await db.from("device_history").select("id,device_id,action,changed_by,old_data,new_data,created_at").eq("device_id",current.id).order("created_at",{ascending:false}).limit(100);
+  if(error){console.error(error);host.innerHTML='<div class="notice">Riwayat belum dapat dimuat. Pastikan skrip migrasi audit sudah dijalankan di Supabase dan policy akses sudah benar.</div>';return}
+  if(!data||!data.length){host.innerHTML='<div class="tiny">Belum ada riwayat perubahan untuk perangkat ini. Perubahan berikutnya akan dicatat otomatis.</div>';return}
+  const labels={device_name:"Nama perangkat",inventory_code:"Kode inventaris",brand:"Merek",model:"Model",serial_number:"Nomor seri",location:"Lokasi",condition:"Kondisi",status:"Status",purchase_date:"Tanggal perolehan",notes:"Catatan/penanggung jawab",category_id:"Kategori"};
+  host.innerHTML=data.map(row=>{
+    const before=row.old_data||{},after=row.new_data||{};
+    let detail=row.action==="INSERT"?"Perangkat dibuat":row.action==="DELETE"?"Perangkat dihapus":"Data perangkat diperbarui";
+    if(row.action==="UPDATE"){
+      const changed=Object.keys(labels).filter(k=>JSON.stringify(before[k]??null)!==JSON.stringify(after[k]??null));
+      detail=changed.length?"Perubahan: "+changed.map(k=>labels[k]).join(", "):"Pembaruan data";
+    }
+    const actor=row.changed_by?"UID petugas: "+row.changed_by:"Aktor tidak tersedia (perubahan di luar sesi pengguna)";
+    const date=new Date(row.created_at).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"});
+    const actionLabel=row.action==="INSERT"?"Dibuat":row.action==="DELETE"?"Dihapus":"Diubah";
+    const cls=row.action==="DELETE"?"red":row.action==="INSERT"?"good":"blue";
+    return `<div class="vaultrow"><div class="vaultico">${row.action==="INSERT"?"＋":row.action==="DELETE"?"−":"↻"}</div><div style="flex:1;min-width:0"><b>${esc(detail)}</b><small>${esc(date)} · ${esc(actor)}</small></div><span class="pill ${cls}">${esc(actionLabel)}</span></div>`;
+  }).join("");
+}
 function openAdd(){$("addForm").reset();$("addModal").classList.add("show")}
 function openEdit(){
   if(!current){toast("Pilih perangkat yang akan diedit.");return}
