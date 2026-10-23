@@ -35,7 +35,7 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
   <div class="stat"><div class="statlabel">Dokumen tercatat</div><div class="statnum" id="docsCount">24</div><div class="statnote">Contoh dokumentasi</div></div>
  </div>
  <section class="card">
-  <div class="cardhead"><div><h2>Data Inventaris Alat</h2><p>Pilih satu perangkat untuk melihat foto, dokumen, dan referensi akun.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" onclick="exportInventory()">↓ Ekspor Excel</button><button class="btn primary" onclick="openAdd()">＋ Tambah perangkat</button></div></div>
+  <div class="cardhead"><div><h2>Data Inventaris Alat</h2><p>Pilih satu perangkat untuk melihat foto, dokumen, dan referensi akun.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" onclick="exportInventory()">↓ Ekspor Excel</button><button class="btn" type="button" onclick="exportPDF()">▤ Cetak PDF</button><button class="btn primary" onclick="openAdd()">＋ Tambah perangkat</button></div></div>
   <div class="filters"><input id="q" placeholder="Cari nama, kode, merek, model, nomor seri, lokasi…"><select id="cat"><option value="">Semua kategori</option></select><select id="cond"><option value="">Semua kondisi</option><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select><select id="statusFilter"><option value="">Semua status</option><option>Tersedia</option><option>Dipinjam</option><option>Dalam pemeliharaan</option></select><button class="btn small" type="button" onclick="resetFilters()">Reset filter</button></div>
   <div class="tablewrap"><table><thead><tr><th>KODE / PERANGKAT</th><th>KATEGORI</th><th>KONDISI</th><th>LOKASI</th><th>DOKUMEN</th><th>AKUN</th><th>DETAIL</th></tr></thead><tbody id="rows"></tbody></table></div>
   <div class="footrow"><span id="count">8 perangkat contoh</span><span>Data inventaris dari database Supabase</span></div>
@@ -71,6 +71,7 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
 /*
  SIMATEL Supabase integration.
@@ -195,6 +196,54 @@ function exportInventory(){
   const ss=XLSX.utils.json_to_sheet(summary); ss["!cols"]=[{wch:32},{wch:16}];
   XLSX.utils.book_append_sheet(wb,ws,"Inventaris"); XLSX.utils.book_append_sheet(wb,ss,"Ringkasan");
   XLSX.writeFile(wb,"SIMATEL_Laporan_Inventaris.xlsx"); toast("Laporan Excel berhasil dibuat.");
+}
+function exportPDF(){
+  if(!window.jspdf||!window.jspdf.jsPDF){toast("Komponen PDF belum termuat. Periksa koneksi internet lalu coba lagi.");return;}
+  const q=$("q").value.trim().toLowerCase(),cat=$("cat").value,cond=$("cond").value,status=$("statusFilter").value;
+  const list=assets.filter(a=>([a.code,a.name,a.model,a.serial,a.owner,a.location,a.category].join(" ").toLowerCase().includes(q))&&(!cat||a.category===cat)&&(!cond||a.condition===cond)&&(!status||a.status===status));
+  const {jsPDF}=window.jspdf; const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+  const pageW=doc.internal.pageSize.getWidth(), pageH=doc.internal.pageSize.getHeight();
+  const now=new Date(); const stamp=now.toLocaleString("id-ID",{dateStyle:"long",timeStyle:"short"});
+  const counts=[
+    ["Total perangkat",list.length],
+    ["Kondisi baik",list.filter(a=>a.condition==="Baik").length],
+    ["Perlu pemeriksaan",list.filter(a=>a.condition==="Perlu pemeriksaan").length],
+    ["Rusak",list.filter(a=>a.condition==="Rusak").length],
+    ["Dokumen tercatat",list.reduce((n,a)=>n+a.docs.length,0)]
+  ];
+  function header(page){
+    doc.setFillColor(18,34,57);doc.rect(0,0,pageW,27,"F");
+    doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(15);doc.text("SIMATEL",14,11);
+    doc.setFontSize(9);doc.setFont("helvetica","normal");doc.text("KEJAKSAAN TINGGI KALIMANTAN TENGAH",14,18);
+    doc.setFontSize(8);doc.text("LAPORAN INVENTARIS PERANGKAT",pageW-14,12,{align:"right"});
+    doc.setTextColor(55,65,81);doc.setFontSize(8);doc.text("Dicetak: "+stamp,14,33);
+    const filters=[];if(q)filters.push("Pencarian: "+q);if(cat)filters.push("Kategori: "+cat);if(cond)filters.push("Kondisi: "+cond);if(status)filters.push("Status: "+status);
+    if(filters.length)doc.text("Filter: "+filters.join(" | "),14,38,{maxWidth:pageW-28});
+    doc.setDrawColor(220,225,232);doc.line(14,41,pageW-14,41);
+  }
+  header(1);
+  let y=49;doc.setFont("helvetica","bold");doc.setFontSize(10);doc.setTextColor(18,34,57);doc.text("RINGKASAN",14,y);y+=6;
+  const boxGap=3, boxW=(pageW-28-boxGap*4)/5;
+  counts.forEach((it,i)=>{const x=14+i*(boxW+boxGap);doc.setDrawColor(218,224,232);doc.setFillColor(247,249,252);doc.roundedRect(x,y,boxW,15,2,2,"FD");doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(85,96,110);doc.text(it[0],x+3,y+5);doc.setFont("helvetica","bold");doc.setFontSize(11);doc.setTextColor(18,34,57);doc.text(String(it[1]),x+3,y+11.5);});
+  y+=23;doc.setFont("helvetica","bold");doc.setFontSize(10);doc.text("DAFTAR INVENTARIS",14,y);y+=5;
+  const cols=[
+    {title:"Kode",key:"code",w:25},{title:"Nama perangkat",key:"name",w:42},{title:"Kategori",key:"category",w:31},{title:"Merek / model",key:"model",w:35},{title:"No. seri",key:"serial",w:29},{title:"Kondisi",key:"condition",w:25},{title:"Status",key:"status",w:27},{title:"Lokasi",key:"location",w:34},{title:"Penanggung jawab",key:"owner",w:31}
+  ];
+  const left=14, totalW=cols.reduce((n,c)=>n+c.w,0), scale=Math.min(1,(pageW-28)/totalW), widths=cols.map(c=>c.w*scale), tableW=widths.reduce((n,w)=>n+w,0);
+  function tableHead(){doc.setFillColor(232,237,243);doc.rect(left,y,tableW,8,"F");doc.setFont("helvetica","bold");doc.setFontSize(7);doc.setTextColor(35,47,62);let x=left;cols.forEach((c,i)=>{doc.text(c.title,x+1,y+5.2,{maxWidth:widths[i]-2});x+=widths[i];});y+=8;}
+  tableHead();doc.setFont("helvetica","normal");doc.setFontSize(7);
+  if(!list.length){doc.setTextColor(90,98,110);doc.text("Tidak ada perangkat yang cocok dengan filter.",left+2,y+6);y+=10;}
+  list.forEach((a,idx)=>{
+    const vals=cols.map(c=>String(a[c.key]||"-").replace(/[\r\n]+/g," "));
+    const wrapped=vals.map((v,i)=>doc.splitTextToSize(v,Math.max(8,widths[i]-2)));
+    const rh=Math.max(7,...wrapped.map(lines=>lines.length*3.2+2));
+    if(y+rh>pageH-15){doc.addPage();header(doc.internal.getNumberOfPages());y=47;tableHead();doc.setFont("helvetica","normal");doc.setFontSize(7);}
+    if(idx%2===1){doc.setFillColor(249,250,252);doc.rect(left,y,tableW,rh,"F");}
+    doc.setDrawColor(228,232,238);doc.line(left,y+rh,left+tableW,y+rh);
+    let x=left;wrapped.forEach((lines,i)=>{doc.setTextColor(45,55,70);doc.text(lines,x+1,y+3.5);x+=widths[i];});y+=rh;
+  });
+  const pages=doc.internal.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(100,110,122);doc.text("SIMATEL · Laporan inventaris internal",14,pageH-6);doc.text("Halaman "+i+" dari "+pages,pageW-14,pageH-6,{align:"right"});}
+  doc.save("SIMATEL_Laporan_Inventaris.pdf");toast("Laporan PDF berhasil dibuat.");
 }
 function resetFilters(){
   $("q").value="";$("cat").value="";$("cond").value="";$("statusFilter").value="";render();
