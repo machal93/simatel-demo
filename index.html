@@ -224,13 +224,10 @@ function ensureHeaderControls(){
   const controls=document.createElement("div");controls.id="simatelUserControls";controls.style.cssText="display:flex;gap:8px;align-items:center";
   controls.innerHTML='<button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut" type="button">↪ Keluar</button>';
   const savedTheme=(()=>{try{return localStorage.getItem("simatel-theme")||"light"}catch(e){return "light"}})();
-  // Pasang elemen ke DOM SEBELUM mencari tombol berdasarkan ID.
-  right.prepend(controls);
   applySimatelTheme(savedTheme);
-  const themeButton=$("simatelThemeToggle");
-  if(themeButton) themeButton.onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
-  const signOutButton=$("simatelSignOut");
-  if(signOutButton) signOutButton.onclick=async()=>{await db.auth.signOut();location.reload()};
+  $("simatelThemeToggle").onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
+  right.prepend(controls);
+  $("simatelSignOut").onclick=async()=>{await db.auth.signOut();location.reload()};
 }
 async function getCategories(){
   const {data,error}=await db.from("device_categories").select("id,name").order("name");
@@ -266,12 +263,20 @@ async function loadAssets(){
   // Pembuatan URL foto privat berjalan di latar belakang agar tidak menahan tabel.
   render();
   Promise.all(assets.map(async a=>{
-    const photoDoc=a.docs.find(d=>/foto perangkat|foto label inventaris/i.test(d[0]||"") && /\.(png|jpe?g|webp|gif)$/i.test(d[1]||""));
-    if(!photoDoc||!photoDoc[2])return;
-    try {
-      const {data,error}=await db.storage.from("simatel-documents").createSignedUrl(photoDoc[2],3600);
-      if(!error&&data?.signedUrl)a.photoUrl=data.signedUrl;
-    } catch(err) { console.warn("Foto perangkat belum dapat dimuat:",err); }
+    // Utamakan dokumentasi yang secara eksplisit bertipe foto. Jangan hanya
+    // mengandalkan ekstensi file_name: nama metadata bisa tidak memiliki ekstensi,
+    // sedangkan storage_path menyimpan nama file fisik yang diunggah.
+    const photoDocs=a.docs.filter(d=>/foto perangkat|foto label inventaris/i.test(String(d[0]||"")) && d[2]);
+    for(const photoDoc of photoDocs){
+      const path=String(photoDoc[2]||"");
+      const ext=(path.split("?")[0].split("/").pop().split(".").pop()||"").toLowerCase();
+      if(ext && !["jpg","jpeg","png","webp","gif","avif","jfif"].includes(ext)) continue;
+      try {
+        const {data,error}=await db.storage.from("simatel-documents").createSignedUrl(path,3600);
+        if(!error&&data?.signedUrl){a.photoUrl=data.signedUrl;break;}
+        if(error) console.warn("URL foto tidak dapat dibuat:",a.code,error.message);
+      } catch(err) { console.warn("Foto perangkat belum dapat dimuat:",a.code,err); }
+    }
   })).then(()=>render()).catch(err=>console.warn("Pemuatan thumbnail selesai dengan kendala:",err));
 }
 function render(){
