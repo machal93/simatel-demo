@@ -35,7 +35,7 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
   <div class="stat"><div class="statlabel">Dokumen tercatat</div><div class="statnum" id="docsCount">24</div><div class="statnote">Contoh dokumentasi</div></div>
  </div>
  <section class="card">
-  <div class="cardhead"><div><h2>Data Inventaris Alat</h2><p>Pilih satu perangkat untuk melihat foto, dokumen, dan referensi akun.</p></div><button class="btn primary" onclick="openAdd()">＋ Tambah perangkat</button></div>
+  <div class="cardhead"><div><h2>Data Inventaris Alat</h2><p>Pilih satu perangkat untuk melihat foto, dokumen, dan referensi akun.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" onclick="exportInventory()">↓ Ekspor Excel</button><button class="btn primary" onclick="openAdd()">＋ Tambah perangkat</button></div></div>
   <div class="filters"><input id="q" placeholder="Cari nama, kode, merek, model, nomor seri, lokasi…"><select id="cat"><option value="">Semua kategori</option></select><select id="cond"><option value="">Semua kondisi</option><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select><select id="statusFilter"><option value="">Semua status</option><option>Tersedia</option><option>Dipinjam</option><option>Dalam pemeliharaan</option></select><button class="btn small" type="button" onclick="resetFilters()">Reset filter</button></div>
   <div class="tablewrap"><table><thead><tr><th>KODE / PERANGKAT</th><th>KATEGORI</th><th>KONDISI</th><th>LOKASI</th><th>DOKUMEN</th><th>AKUN</th><th>DETAIL</th></tr></thead><tbody id="rows"></tbody></table></div>
   <div class="footrow"><span id="count">8 perangkat contoh</span><span>Data inventaris dari database Supabase</span></div>
@@ -70,6 +70,7 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
 <div class="previewback" id="previewModal" onclick="if(event.target===this)closePreview()"><div class="previewpanel" role="dialog" aria-modal="true" aria-label="Pratinjau dokumentasi"><div class="previewhead"><strong id="previewTitle">Pratinjau dokumentasi</strong><button class="btn previewclose" type="button" onclick="closePreview()" aria-label="Tutup pratinjau">✕</button></div><div class="previewcontent" id="previewContent"></div></div></div>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 /*
  SIMATEL Supabase integration.
@@ -182,6 +183,18 @@ function render(){
   const catSelect=$("cat"),selected=catSelect.value;
   catSelect.innerHTML='<option value="">Semua kategori</option>'+categories.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join("");
   catSelect.value=selected;
+}
+function exportInventory(){
+  if(!window.XLSX){toast("Komponen ekspor Excel belum termuat. Periksa koneksi internet lalu coba lagi.");return;}
+  const q=$("q").value.trim().toLowerCase(),cat=$("cat").value,cond=$("cond").value,status=$("statusFilter").value;
+  const list=assets.filter(a=>([a.code,a.name,a.model,a.serial,a.owner,a.location,a.category].join(" ").toLowerCase().includes(q))&&(!cat||a.category===cat)&&(!cond||a.condition===cond)&&(!status||a.status===status));
+  const rows=list.map(a=>({"Kode inventaris":a.code,"Nama perangkat":a.name,"Kategori":a.category,"Merek / model":a.model,"Nomor seri":a.serial,"Kondisi":a.condition,"Status":a.status,"Lokasi":a.location,"Penanggung jawab":a.owner,"Tanggal perolehan":a.date,"Jumlah dokumen":a.docs.length}));
+  const summary=[{"Metrik":"Total perangkat (hasil filter)","Jumlah":list.length},{"Metrik":"Kondisi baik","Jumlah":list.filter(a=>a.condition==="Baik").length},{"Metrik":"Perlu pemeriksaan","Jumlah":list.filter(a=>a.condition==="Perlu pemeriksaan").length},{"Metrik":"Rusak","Jumlah":list.filter(a=>a.condition==="Rusak").length},{"Metrik":"Dokumen tercatat","Jumlah":list.reduce((n,a)=>n+a.docs.length,0)}];
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(rows); ws["!cols"]=[{wch:20},{wch:32},{wch:24},{wch:28},{wch:22},{wch:20},{wch:22},{wch:26},{wch:28},{wch:18},{wch:16}];
+  const ss=XLSX.utils.json_to_sheet(summary); ss["!cols"]=[{wch:32},{wch:16}];
+  XLSX.utils.book_append_sheet(wb,ws,"Inventaris"); XLSX.utils.book_append_sheet(wb,ss,"Ringkasan");
+  XLSX.writeFile(wb,"SIMATEL_Laporan_Inventaris.xlsx"); toast("Laporan Excel berhasil dibuat.");
 }
 function resetFilters(){
   $("q").value="";$("cat").value="";$("cond").value="";$("statusFilter").value="";render();
