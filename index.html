@@ -99,24 +99,24 @@ body[data-theme="dark"] .notice{background:#172d1e;border-color:#31583c;color:#c
  <div class="nav"><span class="ico">▧</span><span>Dokumentasi</span></div>
  <div class="nav"><span class="ico">▣</span><span>Pengelola Kredensial</span></div>
  <div class="nav"><span class="ico">▤</span><span>Laporan</span></div>
- <div class="sidebottom">BIDANG INTELIJEN<br>Prototipe demonstrasi<br>v0.3 · Edit perangkat</div>
+ <div class="sidebottom">BIDANG INTELIJEN<br>Sistem internal<br>SIMATEL · Inventaris</div>
 </aside>
 <main>
 <header class="topbar"><div><div class="crumb" style="color:#b28a3f;font-weight:800;letter-spacing:1.2px">KEJAKSAAN TINGGI KALIMANTAN TENGAH</div><h1 id="pageTitle">Dashboard</h1><div class="crumb">SIMATEL / <span id="crumb">Dashboard</span></div><div style="color:var(--muted);font-size:12px">Pendataan alat elektronik, dokumentasi, dan administrasi perangkat TI.</div></div><div class="topright"><span class="role tiny">AKSES INTERNAL</span><div class="avatar">AP</div></div></header>
 <section id="listPage">
  <div class="gridstats">
-  <div class="stat"><div class="statlabel">Total perangkat</div><div class="statnum" id="total">8</div><div class="statnote">Terdata di inventaris</div></div>
-  <div class="stat"><div class="statlabel">Kondisi baik</div><div class="statnum" id="good" style="color:var(--green)">5</div><div class="statnote">Siap digunakan</div></div>
-  <div class="stat"><div class="statlabel">Perlu pemeriksaan</div><div class="statnum" id="check" style="color:var(--amber)">2</div><div class="statnote">Perlu tindak lanjut</div></div>
-  <div class="stat"><div class="statlabel">Dokumen tercatat</div><div class="statnum" id="docsCount">24</div><div class="statnote">Contoh dokumentasi</div></div>
+  <div class="stat"><div class="statlabel">Total perangkat</div><div class="statnum" id="total">0</div><div class="statnote">Terdata di inventaris</div></div>
+  <div class="stat"><div class="statlabel">Kondisi baik</div><div class="statnum" id="good" style="color:var(--green)">0</div><div class="statnote">Siap digunakan</div></div>
+  <div class="stat"><div class="statlabel">Perlu pemeriksaan</div><div class="statnum" id="check" style="color:var(--amber)">0</div><div class="statnote">Perlu tindak lanjut</div></div>
+  <div class="stat"><div class="statlabel">Dokumen tercatat</div><div class="statnum" id="docsCount">0</div><div class="statnote">Contoh dokumentasi</div></div>
  </div>
  <section class="card">
-  <div class="cardhead"><div><h2>Data Inventaris Alat</h2><p>Pilih satu perangkat untuk melihat foto, dokumen, dan referensi akun.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" onclick="exportInventory()">↓ Ekspor Excel</button><button class="btn" type="button" onclick="exportPDF()">▤ Cetak PDF</button><button class="btn primary" onclick="openAdd()">＋ Tambah perangkat</button></div></div>
+  <div class="cardhead"><div><h2>Data Inventaris Alat</h2><p>Pilih perangkat untuk melihat foto, dokumen, dan riwayatnya.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" onclick="exportInventory()">↓ Ekspor Excel</button><button class="btn" type="button" onclick="exportPDF()">▤ Cetak PDF</button><button class="btn primary" onclick="openAdd()">＋ Tambah perangkat</button></div></div>
   <div class="filters"><input id="q" placeholder="Cari nama, kode, merek, model, nomor seri, lokasi…"><select id="cat"><option value="">Semua kategori</option></select><select id="cond"><option value="">Semua kondisi</option><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select><select id="statusFilter"><option value="">Semua status</option><option>Tersedia</option><option>Dipinjam</option><option>Dalam pemeliharaan</option></select><button class="btn small" type="button" onclick="resetFilters()">Reset filter</button></div>
   <div class="tablewrap"><table><thead><tr><th>FOTO / NAMA PERANGKAT</th><th>KATEGORI</th><th>KONDISI</th><th>LOKASI</th><th>DOKUMEN</th><th>AKUN</th><th>DETAIL</th></tr></thead><tbody id="rows"></tbody></table></div>
-  <div class="footrow"><span id="count">8 perangkat contoh</span><span>Data inventaris dari database Supabase</span></div>
+  <div class="footrow"><span id="count">Memuat data inventaris…</span><span>Data inventaris dari database Supabase</span></div>
  </section>
- <div class="notice"><b>Perhatian:</b> Ini prototipe lokal. Jangan masukkan data inventaris nyata atau kredensial asli. Upload dokumen dan penyimpanan password belum terhubung ke layanan aman.</div>
+ <div class="notice" id="connectionNotice"><b>Status:</b> Menghubungkan ke database SIMATEL…</div>
 </section>
 <section id="detailPage" class="hidden">
  <div class="detailhead"><div><div class="back" onclick="showList()">← Kembali ke inventaris</div><h2 id="dName">Laptop Dinas</h2><div class="crumb" id="dCode">EL-2026-001 · Perangkat contoh</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="openDeviceQR()">▦ QR Code</button><button class="btn" onclick="openEdit()">✎ Edit data</button><button class="btn" onclick="openDevicePhoto()">▧ Tambah/Ubah Foto</button><button class="btn primary" onclick="openDoc()">＋ Tambah dokumentasi</button></div></div>
@@ -224,10 +224,12 @@ function ensureHeaderControls(){
   const controls=document.createElement("div");controls.id="simatelUserControls";controls.style.cssText="display:flex;gap:8px;align-items:center";
   controls.innerHTML='<button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut" type="button">↪ Keluar</button>';
   const savedTheme=(()=>{try{return localStorage.getItem("simatel-theme")||"light"}catch(e){return "light"}})();
-  applySimatelTheme(savedTheme);
-  $("simatelThemeToggle").onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
   right.prepend(controls);
-  $("simatelSignOut").onclick=async()=>{await db.auth.signOut();location.reload()};
+  applySimatelTheme(savedTheme);
+  const themeButton=$("simatelThemeToggle");
+  if(themeButton) themeButton.onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
+  const signOutButton=$("simatelSignOut");
+  if(signOutButton) signOutButton.onclick=async()=>{await db.auth.signOut();location.reload()};
 }
 async function getCategories(){
   const {data,error}=await db.from("device_categories").select("id,name").order("name");
@@ -259,25 +261,40 @@ async function loadAssets(){
     docs:docs.filter(d=>d.device_id===r.id).map(d=>[d.document_type,d.file_name,d.storage_path,d.id]),
     photoUrl:"",username:"",vault:""
   }));
-  // Render data inventaris segera setelah data dan metadata dokumen selesai dimuat.
-  // Pembuatan URL foto privat berjalan di latar belakang agar tidak menahan tabel.
+  // Render daftar lebih dahulu; foto privat dimuat setelahnya agar tabel tidak tertahan.
   render();
-  Promise.all(assets.map(async a=>{
-    // Utamakan dokumentasi yang secara eksplisit bertipe foto. Jangan hanya
-    // mengandalkan ekstensi file_name: nama metadata bisa tidak memiliki ekstensi,
-    // sedangkan storage_path menyimpan nama file fisik yang diunggah.
+  $("connectionNotice").innerHTML="<b>Status:</b> Terhubung ke database SIMATEL.";
+  await Promise.all(assets.map(async a=>{
     const photoDocs=a.docs.filter(d=>/foto perangkat|foto label inventaris/i.test(String(d[0]||"")) && d[2]);
     for(const photoDoc of photoDocs){
-      const path=String(photoDoc[2]||"");
-      const ext=(path.split("?")[0].split("/").pop().split(".").pop()||"").toLowerCase();
-      if(ext && !["jpg","jpeg","png","webp","gif","avif","jfif"].includes(ext)) continue;
-      try {
-        const {data,error}=await db.storage.from("simatel-documents").createSignedUrl(path,3600);
-        if(!error&&data?.signedUrl){a.photoUrl=data.signedUrl;break;}
-        if(error) console.warn("URL foto tidak dapat dibuat:",a.code,error.message);
-      } catch(err) { console.warn("Foto perangkat belum dapat dimuat:",a.code,err); }
+      const raw=String(photoDoc[2]||"").trim();
+      const candidates=[];
+      // Toleransi storage_path relatif, prefiks bucket, atau URL Storage lengkap.
+      if(/^https?:\/\//i.test(raw)){
+        const marker="/object/";
+        const pos=raw.indexOf(marker);
+        if(pos>=0){
+          let tail=raw.slice(pos+marker.length);
+          tail=tail.replace(/^sign\//,"").replace(/^public\//,"").replace(/^authenticated\//,"");
+          const bucketPrefix="simatel-documents/";
+          candidates.push(tail.startsWith(bucketPrefix)?tail.slice(bucketPrefix.length):tail);
+        }
+      } else {
+        const normalized=raw.replace(/^\/+/,"");
+        candidates.push(normalized);
+        candidates.push(normalized.replace(/^simatel-documents\//,""));
+      }
+      for(const path of [...new Set(candidates)].filter(Boolean)){
+        try{
+          const {data,error}=await db.storage.from("simatel-documents").createSignedUrl(path,3600);
+          if(!error&&data?.signedUrl){a.photoUrl=data.signedUrl;break;}
+          if(error) console.warn("URL foto tidak dapat dibuat:",a.code,path,error.message);
+        }catch(err){console.warn("Foto perangkat belum dapat dimuat:",a.code,err);}
+      }
+      if(a.photoUrl) break;
     }
-  })).then(()=>render()).catch(err=>console.warn("Pemuatan thumbnail selesai dengan kendala:",err));
+  }));
+  render();
 }
 function render(){
   const q=$("q").value.trim().toLowerCase(),cat=$("cat").value,cond=$("cond").value,status=$("statusFilter").value;
@@ -572,8 +589,19 @@ async function startApp(){
     await db.auth.signOut();return;
   }
   hideLogin();ensureHeaderControls();$("simatelUserEmail").textContent=profile.full_name||user.email;
-  try{await getCategories();await loadAssets();openDeviceFromQR();$("pageTitle").textContent="Dashboard";$("crumb").textContent="Dashboard";$("listPage").querySelector(".notice").textContent="Terhubung ke database SIMATEL. Gunakan hanya data yang telah disetujui untuk sistem ini."}
-  catch(err){console.error(err);toast("Gagal memuat data. Periksa tabel, relasi, dan policy Supabase.")}
+  try{
+    await getCategories();
+    await loadAssets();
+    openDeviceFromQR();
+    $("pageTitle").textContent="Dashboard";$("crumb").textContent="Dashboard";
+    $("connectionNotice").innerHTML="<b>Status:</b> Terhubung ke database SIMATEL. Gunakan hanya data yang telah disetujui untuk sistem ini.";
+  } catch(err){
+    console.error("SIMATEL gagal memuat data Supabase:",err);
+    $("rows").innerHTML='<tr><td colspan="7" class="empty">Data gagal dimuat dari Supabase. Periksa Console untuk detail kesalahan.</td></tr>';
+    $("count").textContent="Gagal memuat data";
+    $("connectionNotice").innerHTML="<b>Gagal memuat data:</b> Periksa koneksi, policy RLS, nama tabel/kolom, dan relasi Supabase. Data yang tersimpan tidak dihapus.";
+    toast("Gagal memuat data Supabase. Detail tersedia di Console.");
+  }
 }
 if(supabaseReady){if(!showPublicPage()){startApp();db.auth.onAuthStateChange((_event,session)=>{if(!session){const p=$("simatelLogin");if(p)p.style.display="flex"}})}}
 else{if(!showPublicPage())showLogin("Isi SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY pada bagian awal kode sebelum digunakan.")}
