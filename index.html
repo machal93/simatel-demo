@@ -43,7 +43,7 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
  <div class="notice"><b>Perhatian:</b> Ini prototipe lokal. Jangan masukkan data inventaris nyata atau kredensial asli. Upload dokumen dan penyimpanan password belum terhubung ke layanan aman.</div>
 </section>
 <section id="detailPage" class="hidden">
- <div class="detailhead"><div><div class="back" onclick="showList()">← Kembali ke inventaris</div><h2 id="dName">Laptop Dinas</h2><div class="crumb" id="dCode">EL-2026-001 · Perangkat contoh</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="openEdit()">✎ Edit data</button><button class="btn primary" onclick="openDoc()">＋ Tambah dokumentasi</button></div></div>
+ <div class="detailhead"><div><div class="back" onclick="showList()">← Kembali ke inventaris</div><h2 id="dName">Laptop Dinas</h2><div class="crumb" id="dCode">EL-2026-001 · Perangkat contoh</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="openDeviceQR()">▦ QR Code</button><button class="btn" onclick="openEdit()">✎ Edit data</button><button class="btn primary" onclick="openDoc()">＋ Tambah dokumentasi</button></div></div>
  <div class="detailgrid">
   <div>
    <section class="card">
@@ -68,10 +68,12 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
 <div class="modalback" id="editModal"><div class="modal"><div class="modalhead"><h2>Edit data perangkat</h2><button class="btn small" onclick="closeModal('editModal')">Tutup ✕</button></div><form id="editForm"><div class="formgrid"><div class="field"><label>Kode inventaris *</label><input name="code" required readonly><span class="tiny">Kode tidak dapat diubah agar referensi inventaris tetap konsisten.</span></div><div class="field"><label>Nama perangkat *</label><input name="name" required></div><div class="field"><label>Kategori</label><select name="category"></select></div><div class="field"><label>Merek / model</label><input name="model"></div><div class="field"><label>Nomor seri</label><input name="serial"></div><div class="field"><label>Kondisi</label><select name="condition"><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select></div><div class="field"><label>Lokasi</label><input name="location"></div><div class="field"><label>Penanggung jawab</label><input name="owner"></div><div class="field"><label>Tanggal perolehan</label><input name="date" type="date"></div><div class="field"><label>Status</label><select name="status"><option>Tersedia</option><option>Dipinjam</option><option>Dalam pemeliharaan</option></select></div><div class="field full"><span class="tiny">Perubahan akan disimpan ke database SIMATEL. Pastikan data sudah benar sebelum menyimpan.</span></div></div><div class="modalfoot"><button type="button" class="btn" onclick="closeModal('editModal')">Batal</button><button class="btn primary" type="submit">Simpan perubahan</button></div></form></div></div>
 <div class="modalback" id="docModal"><div class="modal"><div class="modalhead"><h2>Tambah dokumentasi</h2><button class="btn small" onclick="closeModal('docModal')">Tutup ✕</button></div><form id="docForm"><div class="formgrid"><div class="field full"><label>Jenis dokumentasi</label><select name="type"><option>Foto perangkat</option><option>Foto label inventaris</option><option>Manual penggunaan</option><option>Kartu garansi</option><option>Dokumen pengadaan</option><option>Dokumen pemeliharaan</option><option>Lainnya</option></select></div><div class="field full"><label>Nama dokumen *</label><input name="name" required placeholder="Contoh: Foto laptop tampak depan"></div><div class="field full"><label>Pilih file (simulasi antarmuka)</label><input name="file" type="file" accept="image/*,.pdf,.doc,.docx" disabled><span class="tiny">Unggah menggunakan bucket privat SIMATEL; berkas dibatasi jenis dan ukuran.</span></div></div><div class="modalfoot"><button type="button" class="btn" onclick="closeModal('docModal')">Batal</button><button class="btn primary" type="submit">Catat dokumentasi demo</button></div></form></div></div>
 <div class="previewback" id="previewModal" onclick="if(event.target===this)closePreview()"><div class="previewpanel" role="dialog" aria-modal="true" aria-label="Pratinjau dokumentasi"><div class="previewhead"><strong id="previewTitle">Pratinjau dokumentasi</strong><button class="btn previewclose" type="button" onclick="closePreview()" aria-label="Tutup pratinjau">✕</button></div><div class="previewcontent" id="previewContent"></div></div></div>
+<div class="modalback" id="qrModal"><div class="modal" style="max-width:460px"><div class="modalhead"><h2>QR Code perangkat</h2><button class="btn small" onclick="closeModal('qrModal')">Tutup ✕</button></div><div style="padding:22px;text-align:center"><div id="qrDeviceName" style="font-size:17px;font-weight:750;margin-bottom:5px"></div><div id="qrDeviceCode" class="tiny" style="margin-bottom:15px"></div><div id="qrCanvas" style="display:flex;justify-content:center;align-items:center;min-height:220px;margin:0 auto 14px"></div><div class="tiny" id="qrHelp">Pindai kode ini untuk membuka detail perangkat SIMATEL. QR tidak memuat password atau dokumen privat.</div></div><div class="modalfoot"><button class="btn" onclick="downloadDeviceQR()">Unduh PNG</button><button class="btn primary" onclick="printDeviceQR()">Cetak Label</button></div></div></div>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 /*
  SIMATEL Supabase integration.
@@ -245,6 +247,45 @@ function exportPDF(){
   const pages=doc.internal.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(100,110,122);doc.text("SIMATEL · Laporan inventaris internal",14,pageH-6);doc.text("Halaman "+i+" dari "+pages,pageW-14,pageH-6,{align:"right"});}
   doc.save("SIMATEL_Laporan_Inventaris.pdf");toast("Laporan PDF berhasil dibuat.");
 }
+let activeQRDevice=null;
+function deviceQRUrl(device){
+  // UUID database menjadi identitas stabil; setelah dipindai, aplikasi akan meminta login seperti biasa.
+  const url=new URL(window.location.href);url.searchParams.set("device",device.id);url.hash="";return url.toString();
+}
+function openDeviceQR(){
+  if(!current){toast("Pilih perangkat terlebih dahulu.");return}
+  activeQRDevice=current;
+  $("qrDeviceName").textContent=current.name||"Perangkat SIMATEL";
+  $("qrDeviceCode").textContent="Kode inventaris: "+current.code;
+  const host=$("qrCanvas");host.replaceChildren();
+  if(!window.QRCode){host.textContent="QR Code belum termuat. Periksa koneksi internet, lalu buka kembali.";toast("Komponen QR Code belum termuat.");return}
+  new QRCode(host,{text:deviceQRUrl(current),width:220,height:220,colorDark:"#0c1c33",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
+  $("qrModal").classList.add("show");
+}
+function downloadDeviceQR(){
+  const host=$("qrCanvas"),img=host.querySelector("img"),canvas=host.querySelector("canvas");
+  const data=img?.src||(canvas?canvas.toDataURL("image/png"):"");
+  if(!data){toast("QR Code belum tersedia.");return}
+  const a=document.createElement("a");a.href=data;a.download="SIMATEL_QR_"+(activeQRDevice?.code||"Perangkat").replace(/[^a-zA-Z0-9_-]/g,"_")+".png";a.click();
+}
+function printDeviceQR(){
+  if(!activeQRDevice){toast("Pilih perangkat terlebih dahulu.");return}
+  const host=$("qrCanvas"),img=host.querySelector("img"),canvas=host.querySelector("canvas");
+  const src=img?.src||(canvas?canvas.toDataURL("image/png"):"");
+  if(!src){toast("QR Code belum tersedia.");return}
+  const w=window.open("","_blank","width=600,height=700");
+  if(!w){toast("Izinkan pop-up untuk mencetak label QR.");return}
+  const name=String(activeQRDevice.name||"Perangkat SIMATEL").replace(/[<>&"']/g,"");
+  const code=String(activeQRDevice.code||"").replace(/[<>&"']/g,"");
+  w.document.write('<!doctype html><html lang="id"><meta charset="utf-8"><title>Label QR SIMATEL</title><style>body{font-family:Arial,sans-serif;text-align:center;margin:0;padding:18mm 10mm;color:#0c1c33}.label{border:1px solid #d6dce5;border-radius:8px;padding:16px;display:inline-block;max-width:80mm}img{width:45mm;height:45mm}h2{font-size:16px;margin:10px 0 5px}p{font-size:12px;margin:4px}</style><div class="label"><strong>SIMATEL</strong><p>Kejaksaan Tinggi Kalimantan Tengah</p><img src="'+src+'"><h2>'+name+'</h2><p>Kode inventaris: '+code+'</p><p>Pindai untuk membuka detail perangkat</p></div><script>window.onload=()=>window.print()<\/script></html>');w.document.close();
+}
+function openDeviceFromQR(){
+  const params=new URLSearchParams(window.location.search),id=params.get("device");
+  if(!id)return;
+  const found=assets.find(a=>String(a.id)===id);
+  if(found){showDetail(encodeURIComponent(found.code));toast("Detail perangkat dibuka dari QR Code.")}
+  else toast("Perangkat dari QR tidak ditemukan atau akses belum tersedia.");
+}
 function resetFilters(){
   $("q").value="";$("cat").value="";$("cond").value="";$("statusFilter").value="";render();
 }
@@ -408,7 +449,7 @@ async function startApp(){
     await db.auth.signOut();return;
   }
   hideLogin();ensureHeaderControls();$("simatelUserEmail").textContent=profile.full_name||user.email;
-  try{await getCategories();await loadAssets();$("pageTitle").textContent="Dashboard";$("crumb").textContent="Dashboard";$("listPage").querySelector(".notice").textContent="Terhubung ke database SIMATEL. Gunakan hanya data yang telah disetujui untuk sistem ini."}
+  try{await getCategories();await loadAssets();openDeviceFromQR();$("pageTitle").textContent="Dashboard";$("crumb").textContent="Dashboard";$("listPage").querySelector(".notice").textContent="Terhubung ke database SIMATEL. Gunakan hanya data yang telah disetujui untuk sistem ini."}
   catch(err){console.error(err);toast("Gagal memuat data. Periksa tabel, relasi, dan policy Supabase.")}
 }
 if(supabaseReady){startApp();db.auth.onAuthStateChange((_event,session)=>{if(!session){const p=$("simatelLogin");if(p)p.style.display="flex"}})}
