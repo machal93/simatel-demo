@@ -259,15 +259,17 @@ async function loadAssets(){
     docs:docs.filter(d=>d.device_id===r.id).map(d=>[d.document_type,d.file_name,d.storage_path,d.id]),
     photoUrl:"",username:"",vault:""
   }));
-  // Foto untuk thumbnail diambil dari dokumentasi foto yang sudah ada di bucket privat.
-  // URL bertanda tangan hanya berlaku sementara dan tidak membuat bucket menjadi publik.
-  await Promise.all(assets.map(async a=>{
+  // Render data inventaris segera setelah data dan metadata dokumen selesai dimuat.
+  // Pembuatan URL foto privat berjalan di latar belakang agar tidak menahan tabel.
+  render();
+  Promise.all(assets.map(async a=>{
     const photoDoc=a.docs.find(d=>/foto perangkat|foto label inventaris/i.test(d[0]||"") && /\.(png|jpe?g|webp|gif)$/i.test(d[1]||""));
     if(!photoDoc||!photoDoc[2])return;
-    const {data,error}=await db.storage.from("simatel-documents").createSignedUrl(photoDoc[2],3600);
-    if(!error&&data?.signedUrl)a.photoUrl=data.signedUrl;
-  }));
-  render();
+    try {
+      const {data,error}=await db.storage.from("simatel-documents").createSignedUrl(photoDoc[2],3600);
+      if(!error&&data?.signedUrl)a.photoUrl=data.signedUrl;
+    } catch(err) { console.warn("Foto perangkat belum dapat dimuat:",err); }
+  })).then(()=>render()).catch(err=>console.warn("Pemuatan thumbnail selesai dengan kendala:",err));
 }
 function render(){
   const q=$("q").value.trim().toLowerCase(),cat=$("cat").value,cond=$("cond").value,status=$("statusFilter").value;
