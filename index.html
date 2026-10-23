@@ -10,11 +10,26 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
 @media(max-width:1000px){.app{grid-template-columns:70px 1fr}.sidebar{padding:18px 8px}.brand{justify-content:center;padding:0 0 20px}.brandtext,.navtitle,.nav span:not(.ico),.sidebottom{display:none}.nav{justify-content:center;padding:13px 6px}.gridstats{grid-template-columns:repeat(2,1fr)}main{padding:20px 15px}.detailgrid{grid-template-columns:1fr}}
 @media(max-width:620px){.app{display:block}.sidebar{display:none}main{padding:14px 10px}.topbar{align-items:flex-start}.topbar h1{font-size:21px}.topright .role{display:none}.gridstats{gap:8px}.stat{padding:12px}.statnum{font-size:23px}.detailhead{flex-direction:column}.deviceintro{flex-direction:column}.devicepic{width:100%;min-height:130px}.docgrid{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.cardhead{align-items:flex-start;flex-wrap:wrap}}
 
-.public-page{display:none;min-height:100vh;background:#f7f9fc;padding:24px;align-items:center;justify-content:center}.public-card{width:min(620px,100%);background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;box-shadow:0 12px 40px #10213a12}.public-top{background:linear-gradient(120deg,#10213a,#193250);color:#fff;padding:24px}.public-top small{color:#d8e2f0;letter-spacing:1px}.public-body{padding:24px}.public-field{padding:13px 0;border-bottom:1px solid #edf0f5}.public-field:last-child{border-bottom:0}.public-label{font-size:11px;color:#718096;margin-bottom:4px}.public-value{font-weight:700;font-size:15px;overflow-wrap:anywhere}.public-note{font-size:11px;color:#718096;line-height:1.6;margin-top:18px}
+/* SIMATEL Modern Tech UI layer — preserves existing application logic */
+:root{color-scheme:light;--bg:#f3f6fb;--white:#ffffff;--navy:#101d35;--navy2:#1d3557;--gold:#4f8cff;--text:#18243a;--muted:#718096;--line:#e1e8f2;--blue:#2563eb;--bluebg:#eaf2ff}
+body{background:radial-gradient(ellipse at 85% 0%,rgba(79,140,255,.08),transparent 32%),var(--bg);transition:background .2s,color .2s}
+.sidebar{background:linear-gradient(180deg,#111f39 0%,#0a1325 100%);border-right:1px solid #263752}
+.crest{background:linear-gradient(135deg,#69a5ff,#3478f6);color:white;box-shadow:0 5px 18px #3478f633}
+.nav{transition:background .18s,transform .18s;border:1px solid transparent}.nav:hover{transform:translateX(2px)}.nav.active{background:linear-gradient(100deg,#2a4770,#1c3353);box-shadow:inset 3px 0 #69a5ff;border-color:#38577f}
+main{padding:28px clamp(16px,3vw,38px)}.topbar{padding:18px 20px;background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 30px rgba(25,50,87,.04)}
+.stat,.card{border-radius:15px;box-shadow:0 7px 24px rgba(25,50,87,.045);transition:box-shadow .18s,transform .18s}.stat{position:relative;overflow:hidden}.stat:after{content:"";position:absolute;right:-22px;top:-28px;width:78px;height:78px;border-radius:50%;background:rgba(79,140,255,.07)}.stat:hover{box-shadow:0 12px 30px rgba(25,50,87,.09);transform:translateY(-2px)}
+.cardhead{padding:20px 21px}.btn{border-radius:10px;transition:transform .15s,box-shadow .15s,border-color .15s}.btn:hover{box-shadow:0 5px 14px rgba(25,50,87,.10);transform:translateY(-1px)}.btn.primary{background:linear-gradient(135deg,#438bff,#2563eb);border-color:#2563eb;color:white}.filters input:focus,.filters select:focus,.field input:focus,.field select:focus{outline:3px solid rgba(59,130,246,.15);border-color:#5794ff}
+th{background:#f0f5fc;color:#53647d}td{padding-top:15px;padding-bottom:15px}tbody tr{transition:background .15s}tbody tr:hover{background:#f0f6ff}.pill{padding:5px 9px}.modal{border:1px solid var(--line);border-radius:17px}.modalhead,.modalfoot{padding:18px 22px}.toast{border:1px solid #2d4566;box-shadow:0 12px 36px #07132640}
+#simatelThemeToggle{min-width:38px;font-size:16px}
+body[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--white:#111c2e;--text:#e5edf8;--muted:#9aabc3;--line:#26354b;--navy:#e5edf8;--navy2:#243c5c;--greenbg:#123b30;--green:#6ee7b7;--amberbg:#463516;--amber:#facc65;--redbg:#451d2b;--red:#fda4af;--bluebg:#172e50;--blue:#93c5fd;background:radial-gradient(ellipse at 85% 0%,rgba(59,130,246,.12),transparent 35%),var(--bg)}
+body[data-theme="dark"] .topbar,body[data-theme="dark"] .stat,body[data-theme="dark"] .card,body[data-theme="dark"] .modal,body[data-theme="dark"] .previewpanel{background:#111c2e;border-color:var(--line);color:var(--text)}
+body[data-theme="dark"] .btn,body[data-theme="dark"] .filters input,body[data-theme="dark"] .filters select,body[data-theme="dark"] .field input,body[data-theme="dark"] .field select{background:#17243a;color:var(--text);border-color:#34445d}
+body[data-theme="dark"] th{background:#17243a;color:#a9bad1}body[data-theme="dark"] td{border-color:#26354b}body[data-theme="dark"] tbody tr:hover{background:#182941}body[data-theme="dark"] .topbar{background:rgba(17,28,46,.86)}body[data-theme="dark"] .tabs{border-color:var(--line)}body[data-theme="dark"] .tab{color:#a9bad1}body[data-theme="dark"] .tab.active{background:#243c5c;color:#fff}body[data-theme="dark"] .devicepic,body[data-theme="dark"] .docicon,body[data-theme="dark"] .vaultico{background:#1b2b42;color:#a9bad1}body[data-theme="dark"] .previewcontent{background:#0b1220}body[data-theme="dark"] .notice{background:#332a18;border-color:#5b4822;color:#f3d58b}body[data-theme="dark"] .modalback{background:#020617c9}
+@media(max-width:620px){main{padding:12px 9px}.topbar{padding:14px;border-radius:12px}.cardhead{padding:15px}.gridstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
-<body>
-<section id="publicDevicePage" class="public-page"><div class="public-card"><div class="public-top"><small>KEJAKSAAN TINGGI KALIMANTAN TENGAH</small><h1 style="margin:8px 0 0;font-size:24px">SIMATEL</h1><div style="margin-top:5px;color:#d8e2f0">Informasi publik perangkat</div></div><div class="public-body"><div id="publicDeviceState" class="tiny">Memuat informasi perangkat...</div><div id="publicDeviceFields"></div><p class="public-note">Halaman ini hanya menampilkan informasi yang secara khusus disetujui untuk publikasi. Informasi internal, nomor seri, lokasi rinci, penanggung jawab, dokumen, dan kredensial tidak ditampilkan.</p></div></div></section>
+<body data-theme="light">
 <div class="app">
 <aside class="sidebar">
  <div class="brand"><div class="crest">S</div><div class="brandtext"><b>SIMATEL</b><small>Kejati Kalimantan Tengah</small></div></div>
@@ -71,7 +86,7 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
 <div class="modalback" id="editModal"><div class="modal"><div class="modalhead"><h2>Edit data perangkat</h2><button class="btn small" onclick="closeModal('editModal')">Tutup ✕</button></div><form id="editForm"><div class="formgrid"><div class="field"><label>Kode inventaris *</label><input name="code" required readonly><span class="tiny">Kode tidak dapat diubah agar referensi inventaris tetap konsisten.</span></div><div class="field"><label>Nama perangkat *</label><input name="name" required></div><div class="field"><label>Kategori</label><select name="category"></select></div><div class="field"><label>Merek / model</label><input name="model"></div><div class="field"><label>Nomor seri</label><input name="serial"></div><div class="field"><label>Kondisi</label><select name="condition"><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select></div><div class="field"><label>Lokasi</label><input name="location"></div><div class="field"><label>Penanggung jawab</label><input name="owner"></div><div class="field"><label>Tanggal perolehan</label><input name="date" type="date"></div><div class="field"><label>Status</label><select name="status"><option>Tersedia</option><option>Dipinjam</option><option>Dalam pemeliharaan</option></select></div><div class="field full"><span class="tiny">Perubahan akan disimpan ke database SIMATEL. Pastikan data sudah benar sebelum menyimpan.</span></div></div><div class="modalfoot"><button type="button" class="btn" onclick="closeModal('editModal')">Batal</button><button class="btn primary" type="submit">Simpan perubahan</button></div></form></div></div>
 <div class="modalback" id="docModal"><div class="modal"><div class="modalhead"><h2>Tambah dokumentasi</h2><button class="btn small" onclick="closeModal('docModal')">Tutup ✕</button></div><form id="docForm"><div class="formgrid"><div class="field full"><label>Jenis dokumentasi</label><select name="type"><option>Foto perangkat</option><option>Foto label inventaris</option><option>Manual penggunaan</option><option>Kartu garansi</option><option>Dokumen pengadaan</option><option>Dokumen pemeliharaan</option><option>Lainnya</option></select></div><div class="field full"><label>Nama dokumen *</label><input name="name" required placeholder="Contoh: Foto laptop tampak depan"></div><div class="field full"><label>Pilih file (simulasi antarmuka)</label><input name="file" type="file" accept="image/*,.pdf,.doc,.docx" disabled><span class="tiny">Unggah menggunakan bucket privat SIMATEL; berkas dibatasi jenis dan ukuran.</span></div></div><div class="modalfoot"><button type="button" class="btn" onclick="closeModal('docModal')">Batal</button><button class="btn primary" type="submit">Catat dokumentasi demo</button></div></form></div></div>
 <div class="previewback" id="previewModal" onclick="if(event.target===this)closePreview()"><div class="previewpanel" role="dialog" aria-modal="true" aria-label="Pratinjau dokumentasi"><div class="previewhead"><strong id="previewTitle">Pratinjau dokumentasi</strong><button class="btn previewclose" type="button" onclick="closePreview()" aria-label="Tutup pratinjau">✕</button></div><div class="previewcontent" id="previewContent"></div></div></div>
-<div class="modalback" id="qrModal"><div class="modal" style="max-width:460px"><div class="modalhead"><h2>QR Code perangkat</h2><button class="btn small" onclick="closeModal('qrModal')">Tutup ✕</button></div><div style="padding:22px;text-align:center"><div id="qrDeviceName" style="font-size:17px;font-weight:750;margin-bottom:5px"></div><div id="qrDeviceCode" class="tiny" style="margin-bottom:15px"></div><div id="qrCanvas" style="display:flex;justify-content:center;align-items:center;min-height:220px;margin:0 auto 14px"></div><div class="tiny" id="qrHelp">Pindai kode ini untuk membuka detail perangkat SIMATEL. QR tidak memuat password atau dokumen privat.</div></div><div class="modalfoot" style="justify-content:space-between;flex-wrap:wrap"><button class="btn small" id="togglePublicQR" onclick="toggleDevicePublicQR()">Aktifkan halaman publik</button><div style="display:flex;gap:8px"><button class="btn" onclick="downloadDeviceQR()">Unduh PNG</button><button class="btn primary" onclick="printDeviceQR()">Cetak Label</button></div></div></div></div>
+<div class="modalback" id="qrModal"><div class="modal" style="max-width:460px"><div class="modalhead"><h2>QR Code perangkat</h2><button class="btn small" onclick="closeModal('qrModal')">Tutup ✕</button></div><div style="padding:22px;text-align:center"><div id="qrDeviceName" style="font-size:17px;font-weight:750;margin-bottom:5px"></div><div id="qrDeviceCode" class="tiny" style="margin-bottom:15px"></div><div id="qrCanvas" style="display:flex;justify-content:center;align-items:center;min-height:220px;margin:0 auto 14px"></div><div class="tiny" id="qrHelp">Pindai kode ini untuk membuka detail perangkat SIMATEL. QR tidak memuat password atau dokumen privat.</div></div><div class="modalfoot"><button class="btn" onclick="downloadDeviceQR()">Unduh PNG</button><button class="btn primary" onclick="printDeviceQR()">Cetak Label</button></div></div></div>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -138,11 +153,21 @@ function showLogin(message="Silakan login dengan akun SIMATEL yang telah dibuat 
   panel.style.display="flex";
 }
 function hideLogin(){const p=$("simatelLogin");if(p)p.style.display="none"}
+function applySimatelTheme(theme,save=false){
+  const chosen=theme==="dark"?"dark":"light";
+  document.body.dataset.theme=chosen;
+  const button=$("simatelThemeToggle");
+  if(button){button.textContent=chosen==="dark"?"☀":"☾";button.title=chosen==="dark"?"Gunakan tema terang":"Gunakan tema gelap";button.setAttribute("aria-label",button.title)}
+  if(save){try{localStorage.setItem("simatel-theme",chosen)}catch(e){}}
+}
 function ensureHeaderControls(){
   const right=document.querySelector(".topright");
   if(!right || $("simatelUserControls"))return;
   const controls=document.createElement("div");controls.id="simatelUserControls";controls.style.cssText="display:flex;gap:8px;align-items:center";
-  controls.innerHTML='<span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut">Keluar</button>';
+  controls.innerHTML='<button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut">Keluar</button>';
+  const savedTheme=(()=>{try{return localStorage.getItem("simatel-theme")||"light"}catch(e){return "light"}})();
+  applySimatelTheme(savedTheme);
+  $("simatelThemeToggle").onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
   right.prepend(controls);
   $("simatelSignOut").onclick=async()=>{await db.auth.signOut();location.reload()};
 }
@@ -161,7 +186,7 @@ async function getCategories(){
   if(select){select.innerHTML=categories.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join("")}
 }
 async function loadAssets(){
-  const {data:rows,error}=await db.from("devices").select("id,inventory_code,device_name,category_id,brand,model,serial_number,location,condition,status,purchase_date,notes,public_qr_enabled,device_categories(name)").order("created_at",{ascending:false});
+  const {data:rows,error}=await db.from("devices").select("id,inventory_code,device_name,category_id,brand,model,serial_number,location,condition,status,purchase_date,notes,device_categories(name)").order("created_at",{ascending:false});
   if(error)throw error;
   const ids=(rows||[]).map(r=>r.id);
   let docs=[];
@@ -172,7 +197,7 @@ async function loadAssets(){
   assets=(rows||[]).map(r=>({
     id:r.id,code:r.inventory_code,name:r.device_name,category:r.device_categories?.name||categories.find(c=>c.id===r.category_id)?.name||"Lainnya",
     model:[r.brand,r.model].filter(Boolean).join(" ")||"",serial:r.serial_number||"",condition:uiCondition(r.condition),status:uiStatus(r.status),
-    publicQrEnabled:!!r.public_qr_enabled,location:r.location||"",owner:(r.notes||"").startsWith("Penanggung jawab: ")?(r.notes||"").slice("Penanggung jawab: ".length):"",date:r.purchase_date||"",notes:r.notes||"",
+    location:r.location||"",owner:(r.notes||"").startsWith("Penanggung jawab: ")?(r.notes||"").slice("Penanggung jawab: ".length):"",date:r.purchase_date||"",notes:r.notes||"",
     docs:docs.filter(d=>d.device_id===r.id).map(d=>[d.document_type,d.file_name,d.storage_path,d.id]),
     username:"",vault:""
   }));
@@ -253,12 +278,11 @@ function exportPDF(){
 let activeQRDevice=null;
 function deviceQRUrl(device){
   // UUID database menjadi identitas stabil; setelah dipindai, aplikasi akan meminta login seperti biasa.
-  const url=new URL(window.location.href);url.searchParams.delete("device");url.searchParams.set("public_device",device.id);url.hash="";return url.toString();
+  const url=new URL(window.location.href);url.searchParams.set("device",device.id);url.hash="";return url.toString();
 }
 function openDeviceQR(){
   if(!current){toast("Pilih perangkat terlebih dahulu.");return}
   activeQRDevice=current;
-  const pubBtn=$("togglePublicQR");if(pubBtn){pubBtn.textContent=current.publicQrEnabled?"Nonaktifkan halaman publik":"Aktifkan halaman publik";pubBtn.disabled=false;}
   $("qrDeviceName").textContent=current.name||"Perangkat SIMATEL";
   $("qrDeviceCode").textContent="Kode inventaris: "+current.code;
   const host=$("qrCanvas");host.replaceChildren();
@@ -282,35 +306,6 @@ function printDeviceQR(){
   const name=String(activeQRDevice.name||"Perangkat SIMATEL").replace(/[<>&"']/g,"");
   const code=String(activeQRDevice.code||"").replace(/[<>&"']/g,"");
   w.document.write('<!doctype html><html lang="id"><meta charset="utf-8"><title>Label QR SIMATEL</title><style>body{font-family:Arial,sans-serif;text-align:center;margin:0;padding:18mm 10mm;color:#0c1c33}.label{border:1px solid #d6dce5;border-radius:8px;padding:16px;display:inline-block;max-width:80mm}img{width:45mm;height:45mm}h2{font-size:16px;margin:10px 0 5px}p{font-size:12px;margin:4px}</style><div class="label"><strong>SIMATEL</strong><p>Kejaksaan Tinggi Kalimantan Tengah</p><img src="'+src+'"><h2>'+name+'</h2><p>Kode inventaris: '+code+'</p><p>Pindai untuk membuka detail perangkat</p></div><script>window.onload=()=>window.print()<\/script></html>');w.document.close();
-}
-async function toggleDevicePublicQR(){
-  if(!activeQRDevice||!db){toast("Pilih perangkat dan pastikan database terhubung.");return}
-  const next=!activeQRDevice.publicQrEnabled;
-  const btn=$("togglePublicQR");if(btn){btn.disabled=true;btn.textContent="Menyimpan..."}
-  const {error}=await db.from("devices").update({public_qr_enabled:next}).eq("id",activeQRDevice.id).select("id").maybeSingle();
-  if(error){console.error(error);toast("Gagal mengubah izin QR publik. Pastikan SQL QR publik sudah diterapkan dan akun berwenang.");if(btn){btn.disabled=false;btn.textContent=activeQRDevice.publicQrEnabled?"Nonaktifkan halaman publik":"Aktifkan halaman publik"}return}
-  activeQRDevice.publicQrEnabled=next;const local=assets.find(a=>a.id===activeQRDevice.id);if(local)local.publicQrEnabled=next;
-  if(btn){btn.disabled=false;btn.textContent=next?"Nonaktifkan halaman publik":"Aktifkan halaman publik"}
-  // Refresh QR so it points to the public route only after explicit enablement.
-  const host=$("qrCanvas");host.replaceChildren();new QRCode(host,{text:deviceQRUrl(activeQRDevice),width:220,height:220,colorDark:"#0c1c33",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
-  toast(next?"Halaman publik diaktifkan. QR dapat menampilkan informasi terbatas.":"Halaman publik dinonaktifkan.");
-}
-function showPublicPage(){
-  const params=new URLSearchParams(window.location.search);const id=params.get("public_device");if(!id)return false;
-  document.querySelector(".app").style.display="none";const login=$("simatelLogin");if(login)login.style.display="none";
-  const page=$("publicDevicePage");page.style.display="flex";
-  if(!db){$("publicDeviceState").textContent="Informasi belum dapat dimuat. Coba kembali nanti.";return true}
-  (async()=>{
-    // The public page calls only a narrowly scoped RPC; it never selects from devices directly.
-    const {data,error}=await db.rpc("simatel_public_device_info",{p_device_id:id});
-    const state=$("publicDeviceState"),fields=$("publicDeviceFields");
-    if(error||!data||!data.length){state.textContent="Perangkat tidak ditemukan atau informasi publik tidak diaktifkan.";fields.replaceChildren();return}
-    const d=Array.isArray(data)?data[0]:data;
-    state.textContent="Informasi perangkat yang disetujui untuk publikasi";
-    const entries=[["Kode inventaris",d.inventory_code],["Nama perangkat",d.device_name],["Kategori",d.category_name]];
-    fields.innerHTML=entries.filter(([k,v])=>v).map(([k,v])=>`<div class="public-field"><div class="public-label">${esc(k)}</div><div class="public-value">${esc(v)}</div></div>`).join("");
-  })();
-  return true;
 }
 function openDeviceFromQR(){
   const params=new URLSearchParams(window.location.search),id=params.get("device");
@@ -485,7 +480,7 @@ async function startApp(){
   try{await getCategories();await loadAssets();openDeviceFromQR();$("pageTitle").textContent="Dashboard";$("crumb").textContent="Dashboard";$("listPage").querySelector(".notice").textContent="Terhubung ke database SIMATEL. Gunakan hanya data yang telah disetujui untuk sistem ini."}
   catch(err){console.error(err);toast("Gagal memuat data. Periksa tabel, relasi, dan policy Supabase.")}
 }
-if(supabaseReady){if(!showPublicPage()){startApp();db.auth.onAuthStateChange((_event,session)=>{if(!session){const p=$("simatelLogin");if(p)p.style.display="flex"}})}}
-else{if(!showPublicPage())showLogin("Isi SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY pada bagian awal kode sebelum digunakan.")}
+if(supabaseReady){startApp();db.auth.onAuthStateChange((_event,session)=>{if(!session){const p=$("simatelLogin");if(p)p.style.display="flex"}})}
+else{showLogin("Isi SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY pada bagian awal kode sebelum digunakan.")}
 </script>
 </body></html>
