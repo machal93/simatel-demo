@@ -36,7 +36,7 @@ main{min-width:0;padding:25px 30px}.topbar{display:flex;justify-content:space-be
  </div>
  <section class="card">
   <div class="cardhead"><div><h2>Data Inventaris Alat</h2><p>Pilih satu perangkat untuk melihat foto, dokumen, dan referensi akun.</p></div><button class="btn primary" onclick="openAdd()">＋ Tambah perangkat</button></div>
-  <div class="filters"><input id="q" placeholder="Cari nama, kode, model, nomor seri…"><select id="cat"><option value="">Semua kategori</option><option>Laptop & Komputer</option><option>Jaringan</option><option>Komunikasi</option><option>Dokumentasi</option><option>Periferal</option></select><select id="cond"><option value="">Semua kondisi</option><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select></div>
+  <div class="filters"><input id="q" placeholder="Cari nama, kode, merek, model, nomor seri, lokasi…"><select id="cat"><option value="">Semua kategori</option></select><select id="cond"><option value="">Semua kondisi</option><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select><select id="statusFilter"><option value="">Semua status</option><option>Tersedia</option><option>Dipinjam</option><option>Dalam pemeliharaan</option></select><button class="btn small" type="button" onclick="resetFilters()">Reset filter</button></div>
   <div class="tablewrap"><table><thead><tr><th>KODE / PERANGKAT</th><th>KATEGORI</th><th>KONDISI</th><th>LOKASI</th><th>DOKUMEN</th><th>AKUN</th><th>DETAIL</th></tr></thead><tbody id="rows"></tbody></table></div>
   <div class="footrow"><span id="count">8 perangkat contoh</span><span>Data inventaris dari database Supabase</span></div>
  </section>
@@ -171,16 +171,19 @@ async function loadAssets(){
   render();
 }
 function render(){
-  const q=$("q").value.toLowerCase(),cat=$("cat").value,cond=$("cond").value;
-  const list=assets.filter(a=>([a.code,a.name,a.model,a.serial,a.owner].join(" ").toLowerCase().includes(q))&&(!cat||a.category===cat)&&(!cond||a.condition===cond));
+  const q=$("q").value.trim().toLowerCase(),cat=$("cat").value,cond=$("cond").value,status=$("statusFilter").value;
+  const list=assets.filter(a=>([a.code,a.name,a.model,a.serial,a.owner,a.location,a.category].join(" ").toLowerCase().includes(q))&&(!cat||a.category===cat)&&(!cond||a.condition===cond)&&(!status||a.status===status));
   $("rows").innerHTML=list.map(a=>`<tr><td><b>${esc(a.name)}</b><div class="code">${esc(a.code)} · ${esc(a.model)}</div></td><td>${esc(a.category)}</td><td><span class="pill ${conditionClass(a.condition)}">${esc(a.condition)}</span></td><td>${esc(a.location||"-")}</td><td>${a.docs.length} berkas</td><td><span style="color:#8b98aa">Tidak disimpan</span></td><td><button class="btn small" onclick="showDetail('${encodeURIComponent(a.code)}')">Buka →</button></td></tr>`).join("")||'<tr><td colspan="7" class="empty">Belum ada perangkat atau tidak ada hasil yang cocok.</td></tr>';
   $("count").textContent=`Menampilkan ${list.length} dari ${assets.length} perangkat`;
   $("total").textContent=assets.length;$("good").textContent=assets.filter(a=>a.condition==="Baik").length;
   $("check").textContent=assets.filter(a=>a.condition==="Perlu pemeriksaan").length;
   $("docsCount").textContent=assets.reduce((n,a)=>n+a.docs.length,0);
   const catSelect=$("cat"),selected=catSelect.value;
-  catSelect.innerHTML='<option value="">Semua kategori</option>'+categories.map(c=>`<option>${esc(c.name)}</option>`).join("");
+  catSelect.innerHTML='<option value="">Semua kategori</option>'+categories.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join("");
   catSelect.value=selected;
+}
+function resetFilters(){
+  $("q").value="";$("cat").value="";$("cond").value="";$("statusFilter").value="";render();
 }
 function showList(){$("listPage").classList.remove("hidden");$("detailPage").classList.add("hidden");$("pageTitle").textContent="Inventaris Perangkat";$("crumb").textContent="Inventaris";render()}
 window.showDetail=code=>{
@@ -267,7 +270,7 @@ $("docForm").onsubmit=async e=>{
   if(metaError){await db.storage.from("simatel-documents").remove([path]);toast("Metadata gagal disimpan; unggahan dibatalkan.");console.error(metaError);return}
   closeModal("docModal");await loadAssets();const refreshed=assets.find(a=>a.id===current.id);if(refreshed)showDetail(encodeURIComponent(refreshed.code));toast("Dokumentasi berhasil diunggah.");
 };
-$("q").addEventListener("input",render);$("cat").addEventListener("change",render);$("cond").addEventListener("change",render);
+$("q").addEventListener("input",render);$("cat").addEventListener("change",render);$("cond").addEventListener("change",render);$("statusFilter").addEventListener("change",render);
 async function startApp(){
   if(!db){showLogin("Konfigurasi Supabase belum diisi. Tambahkan URL dan publishable key di kode sebelum login.");return}
   const {data:{user},error}=await db.auth.getUser();
