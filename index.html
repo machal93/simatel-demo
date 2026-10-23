@@ -325,13 +325,35 @@ async function getCategories(){
   if(select){select.innerHTML=categories.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join("")}
 }
 async function loadAssets(){
-  const {data:rows,error}=await db.from("devices").select("id,inventory_code,device_name,category_id,brand,model,serial_number,location,condition,status,purchase_date,notes,public_qr_enabled,device_categories(name)").order("created_at",{ascending:false});
-  if(error)throw error;
+  // Muat perangkat terlebih dahulu. Kegagalan tabel dokumentasi tidak boleh membuat seluruh inventaris kosong.
+  let rows = null;
+  let deviceError = null;
+  const primary = await db.from("devices")
+    .select("id,inventory_code,device_name,category_id,brand,model,serial_number,location,condition,status,purchase_date,notes,public_qr_enabled,device_categories(name)")
+    .order("created_at",{ascending:false});
+  rows = primary.data;
+  deviceError = primary.error;
+
+  // Fallback kompatibilitas jika kolom QR atau relasi kategori belum tersedia di skema database.
+  if (deviceError) {
+    console.warn("Query inventaris utama gagal, mencoba query kompatibilitas:", deviceError.message);
+    const fallback = await db.from("devices")
+      .select("id,inventory_code,device_name,category_id,brand,model,serial_number,location,condition,status,purchase_date,notes")
+      .order("created_at",{ascending:false});
+    rows = fallback.data;
+    deviceError = fallback.error;
+  }
+  if(deviceError) throw deviceError;
+
   const ids=(rows||[]).map(r=>r.id);
   let docs=[];
+  let docsWarning = "";
   if(ids.length){
     const {data:d,error:docError}=await db.from("device_documents").select("id,device_id,document_type,file_name,storage_path,created_at").in("device_id",ids).order("created_at",{ascending:false});
-    if(docError)throw docError;docs=d||[];
+    if(docError){
+      console.warn("Dokumentasi tidak dapat dimuat; inventaris tetap ditampilkan:",docError.message);
+      docsWarning = " Data perangkat dimuat, tetapi dokumentasi tidak dapat diambil. Periksa izin tabel device_documents.";
+    } else docs=d||[];
   }
   assets=(rows||[]).map(r=>({
     id:r.id,code:r.inventory_code,name:r.device_name,publicQrEnabled:!!r.public_qr_enabled,category:r.device_categories?.name||categories.find(c=>c.id===r.category_id)?.name||"Lainnya",
@@ -342,7 +364,7 @@ async function loadAssets(){
   }));
   // Render daftar lebih dahulu; foto privat dimuat setelahnya agar tabel tidak tertahan.
   render();
-  $("connectionNotice").innerHTML="<b>Status:</b> Terhubung ke database SIMATEL.";
+  $("connectionNotice").innerHTML="<b>Status:</b> Inventaris dimuat dari database SIMATEL."+esc(docsWarning);
   await Promise.all(assets.map(async a=>{
     const photoDocs=a.docs.filter(d=>/foto perangkat|foto label inventaris/i.test(String(d[0]||"")) && d[2]);
     for(const photoDoc of photoDocs){
@@ -714,7 +736,12 @@ async function startApp(){
   }
   hideLogin();ensureHeaderControls();$("simatelUserEmail").textContent=profile.full_name||user.email;
   try{
-    await getCategories();
+    try {
+      await getCategories();
+    } catch(categoryErr) {
+      console.warn("Kategori tidak dapat dimuat; inventaris tetap dicoba:", categoryErr?.message || categoryErr);
+      categories = [];
+    }
     await loadAssets();
     openDeviceFromQR();
     showDashboard();
@@ -723,7 +750,8 @@ async function startApp(){
     console.error("SIMATEL gagal memuat data Supabase:",err);
     $("rows").innerHTML='<tr><td colspan="7" class="empty">Data gagal dimuat dari Supabase. Periksa Console untuk detail kesalahan.</td></tr>';
     $("count").textContent="Gagal memuat data";
-    $("connectionNotice").innerHTML="<b>Gagal memuat data:</b> Periksa koneksi, policy RLS, nama tabel/kolom, dan relasi Supabase. Data yang tersimpan tidak dihapus.";
+    $("connectionNotice").innerHTML="<b>Gagal memuat data:</b> "+esc(err?.message || "Kesalahan Supabase tidak diketahui")+". Data yang tersimpan tidak dihapus. Buka Console browser untuk rincian.";
+
     toast("Gagal memuat data Supabase. Detail tersedia di Console.");
   }
 }
