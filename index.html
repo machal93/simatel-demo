@@ -224,10 +224,13 @@ function ensureHeaderControls(){
   const controls=document.createElement("div");controls.id="simatelUserControls";controls.style.cssText="display:flex;gap:8px;align-items:center";
   controls.innerHTML='<button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut" type="button">↪ Keluar</button>';
   const savedTheme=(()=>{try{return localStorage.getItem("simatel-theme")||"light"}catch(e){return "light"}})();
-  applySimatelTheme(savedTheme);
-  $("simatelThemeToggle").onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
+  // Pasang elemen ke DOM SEBELUM mencari tombol berdasarkan ID.
   right.prepend(controls);
-  $("simatelSignOut").onclick=async()=>{await db.auth.signOut();location.reload()};
+  applySimatelTheme(savedTheme);
+  const themeButton=$("simatelThemeToggle");
+  if(themeButton) themeButton.onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
+  const signOutButton=$("simatelSignOut");
+  if(signOutButton) signOutButton.onclick=async()=>{await db.auth.signOut();location.reload()};
 }
 async function getCategories(){
   const {data,error}=await db.from("device_categories").select("id,name").order("name");
