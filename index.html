@@ -74,9 +74,20 @@ body[data-theme="dark"] .card{background:#112219}body[data-theme="dark"] .cardhe
 body[data-theme="dark"] th{background:#112219;color:#a5e0b7}body[data-theme="dark"] tbody tr{background:#15261b;border-color:#112219}body[data-theme="dark"] tbody tr:hover{background:#1b3524}
 body[data-theme="dark"] .notice{background:#172d1e;border-color:#31583c;color:#c4e6cc}body[data-theme="dark"] .topright .role{background:#193b28;color:#c8f0d3}
 
+
+/* Restored controls and privacy-limited QR public view */
+.btn.primary{background:#258653;border-color:#258653;color:#fff}
+.btn.primary:hover{background:#1d7044}
+#simatelSignOut{display:inline-flex;align-items:center;gap:5px;border-color:#d4e6da;color:#145236;background:#fff}
+.public-page{display:none;min-height:100vh;background:#f3f7f4;padding:24px;align-items:center;justify-content:center}
+.public-card{width:min(620px,100%);background:#fff;border:1px solid #dce9df;border-radius:16px;overflow:hidden;box-shadow:0 12px 40px #14523612}
+.public-top{background:linear-gradient(120deg,#145236,#258653);color:#fff;padding:24px}
+.public-top small{color:#e0f3e6;letter-spacing:1px}.public-body{padding:24px}.public-field{padding:13px 0;border-bottom:1px solid #edf2ee}.public-field:last-child{border-bottom:0}.public-label{font-size:11px;color:#718078;margin-bottom:4px}.public-value{font-weight:700;font-size:15px;overflow-wrap:anywhere}.public-note{font-size:11px;color:#718078;line-height:1.6;margin-top:18px}
+
 </style>
 </head>
 <body data-theme="light">
+<section id="publicDevicePage" class="public-page"><div class="public-card"><div class="public-top"><small>KEJAKSAAN TINGGI KALIMANTAN TENGAH</small><h1 style="margin:8px 0 0;font-size:24px">SIMATEL</h1><div style="margin-top:5px">Informasi publik perangkat</div></div><div class="public-body"><div id="publicDeviceState" class="tiny">Memuat informasi perangkat...</div><div id="publicDeviceFields"></div><p class="public-note">Halaman ini hanya menampilkan kode inventaris, nama perangkat, dan kategori yang telah disetujui untuk publikasi. Informasi internal dan dokumen tidak ditampilkan.</p></div></div></section>
 <div class="app">
 <aside class="sidebar">
  <div class="brand"><div class="crest">S</div><div class="brandtext"><b>SIMATEL</b><small>Kejati Kalimantan Tengah</small></div></div>
@@ -108,7 +119,7 @@ body[data-theme="dark"] .notice{background:#172d1e;border-color:#31583c;color:#c
  <div class="notice"><b>Perhatian:</b> Ini prototipe lokal. Jangan masukkan data inventaris nyata atau kredensial asli. Upload dokumen dan penyimpanan password belum terhubung ke layanan aman.</div>
 </section>
 <section id="detailPage" class="hidden">
- <div class="detailhead"><div><div class="back" onclick="showList()">← Kembali ke inventaris</div><h2 id="dName">Laptop Dinas</h2><div class="crumb" id="dCode">EL-2026-001 · Perangkat contoh</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="openDeviceQR()">▦ QR Code</button><button class="btn" onclick="openEdit()">✎ Edit data</button><button class="btn primary" onclick="openDoc()">＋ Tambah dokumentasi</button></div></div>
+ <div class="detailhead"><div><div class="back" onclick="showList()">← Kembali ke inventaris</div><h2 id="dName">Laptop Dinas</h2><div class="crumb" id="dCode">EL-2026-001 · Perangkat contoh</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="openDeviceQR()">▦ QR Code</button><button class="btn" onclick="openEdit()">✎ Edit data</button><button class="btn" onclick="openDevicePhoto()">▧ Tambah/Ubah Foto</button><button class="btn primary" onclick="openDoc()">＋ Tambah dokumentasi</button></div></div>
  <div class="detailgrid">
   <div>
    <section class="card">
@@ -133,7 +144,7 @@ body[data-theme="dark"] .notice{background:#172d1e;border-color:#31583c;color:#c
 <div class="modalback" id="editModal"><div class="modal"><div class="modalhead"><h2>Edit data perangkat</h2><button class="btn small" onclick="closeModal('editModal')">Tutup ✕</button></div><form id="editForm"><div class="formgrid"><div class="field"><label>Kode inventaris *</label><input name="code" required readonly><span class="tiny">Kode tidak dapat diubah agar referensi inventaris tetap konsisten.</span></div><div class="field"><label>Nama perangkat *</label><input name="name" required></div><div class="field"><label>Kategori</label><select name="category"></select></div><div class="field"><label>Merek / model</label><input name="model"></div><div class="field"><label>Nomor seri</label><input name="serial"></div><div class="field"><label>Kondisi</label><select name="condition"><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select></div><div class="field"><label>Lokasi</label><input name="location"></div><div class="field"><label>Penanggung jawab</label><input name="owner"></div><div class="field"><label>Tanggal perolehan</label><input name="date" type="date"></div><div class="field"><label>Status</label><select name="status"><option>Tersedia</option><option>Dipinjam</option><option>Dalam pemeliharaan</option></select></div><div class="field full"><span class="tiny">Perubahan akan disimpan ke database SIMATEL. Pastikan data sudah benar sebelum menyimpan.</span></div></div><div class="modalfoot"><button type="button" class="btn" onclick="closeModal('editModal')">Batal</button><button class="btn primary" type="submit">Simpan perubahan</button></div></form></div></div>
 <div class="modalback" id="docModal"><div class="modal"><div class="modalhead"><h2>Tambah dokumentasi</h2><button class="btn small" onclick="closeModal('docModal')">Tutup ✕</button></div><form id="docForm"><div class="formgrid"><div class="field full"><label>Jenis dokumentasi</label><select name="type"><option>Foto perangkat</option><option>Foto label inventaris</option><option>Manual penggunaan</option><option>Kartu garansi</option><option>Dokumen pengadaan</option><option>Dokumen pemeliharaan</option><option>Lainnya</option></select></div><div class="field full"><label>Nama dokumen *</label><input name="name" required placeholder="Contoh: Foto laptop tampak depan"></div><div class="field full"><label>Pilih file (simulasi antarmuka)</label><input name="file" type="file" accept="image/*,.pdf,.doc,.docx" disabled><span class="tiny">Unggah menggunakan bucket privat SIMATEL; berkas dibatasi jenis dan ukuran.</span></div></div><div class="modalfoot"><button type="button" class="btn" onclick="closeModal('docModal')">Batal</button><button class="btn primary" type="submit">Catat dokumentasi demo</button></div></form></div></div>
 <div class="previewback" id="previewModal" onclick="if(event.target===this)closePreview()"><div class="previewpanel" role="dialog" aria-modal="true" aria-label="Pratinjau dokumentasi"><div class="previewhead"><strong id="previewTitle">Pratinjau dokumentasi</strong><button class="btn previewclose" type="button" onclick="closePreview()" aria-label="Tutup pratinjau">✕</button></div><div class="previewcontent" id="previewContent"></div></div></div>
-<div class="modalback" id="qrModal"><div class="modal" style="max-width:460px"><div class="modalhead"><h2>QR Code perangkat</h2><button class="btn small" onclick="closeModal('qrModal')">Tutup ✕</button></div><div style="padding:22px;text-align:center"><div id="qrDeviceName" style="font-size:17px;font-weight:750;margin-bottom:5px"></div><div id="qrDeviceCode" class="tiny" style="margin-bottom:15px"></div><div id="qrCanvas" style="display:flex;justify-content:center;align-items:center;min-height:220px;margin:0 auto 14px"></div><div class="tiny" id="qrHelp">Pindai kode ini untuk membuka detail perangkat SIMATEL. QR tidak memuat password atau dokumen privat.</div></div><div class="modalfoot"><button class="btn" onclick="downloadDeviceQR()">Unduh PNG</button><button class="btn primary" onclick="printDeviceQR()">Cetak Label</button></div></div></div>
+<div class="modalback" id="qrModal"><div class="modal" style="max-width:460px"><div class="modalhead"><h2>QR Code perangkat</h2><button class="btn small" onclick="closeModal('qrModal')">Tutup ✕</button></div><div style="padding:22px;text-align:center"><div id="qrDeviceName" style="font-size:17px;font-weight:750;margin-bottom:5px"></div><div id="qrDeviceCode" class="tiny" style="margin-bottom:15px"></div><div id="qrCanvas" style="display:flex;justify-content:center;align-items:center;min-height:220px;margin:0 auto 14px"></div><div class="tiny" id="qrHelp">Pindai kode ini untuk membuka detail perangkat SIMATEL. QR tidak memuat password atau dokumen privat.</div></div><div class="modalfoot" style="justify-content:space-between;flex-wrap:wrap"><button class="btn small" id="togglePublicQR" type="button" onclick="toggleDevicePublicQR()">Aktifkan halaman publik</button><div style="display:flex;gap:8px"><button class="btn" onclick="downloadDeviceQR()">Unduh PNG</button><button class="btn primary" onclick="printDeviceQR()">Cetak Label</button></div></div></div></div>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -211,7 +222,7 @@ function ensureHeaderControls(){
   const right=document.querySelector(".topright");
   if(!right || $("simatelUserControls"))return;
   const controls=document.createElement("div");controls.id="simatelUserControls";controls.style.cssText="display:flex;gap:8px;align-items:center";
-  controls.innerHTML='<button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut">Keluar</button>';
+  controls.innerHTML='<button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut" type="button">↪ Keluar</button>';
   const savedTheme=(()=>{try{return localStorage.getItem("simatel-theme")||"light"}catch(e){return "light"}})();
   applySimatelTheme(savedTheme);
   $("simatelThemeToggle").onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
@@ -233,7 +244,7 @@ async function getCategories(){
   if(select){select.innerHTML=categories.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join("")}
 }
 async function loadAssets(){
-  const {data:rows,error}=await db.from("devices").select("id,inventory_code,device_name,category_id,brand,model,serial_number,location,condition,status,purchase_date,notes,device_categories(name)").order("created_at",{ascending:false});
+  const {data:rows,error}=await db.from("devices").select("id,inventory_code,device_name,category_id,brand,model,serial_number,location,condition,status,purchase_date,notes,public_qr_enabled,device_categories(name)").order("created_at",{ascending:false});
   if(error)throw error;
   const ids=(rows||[]).map(r=>r.id);
   let docs=[];
@@ -242,7 +253,7 @@ async function loadAssets(){
     if(docError)throw docError;docs=d||[];
   }
   assets=(rows||[]).map(r=>({
-    id:r.id,code:r.inventory_code,name:r.device_name,category:r.device_categories?.name||categories.find(c=>c.id===r.category_id)?.name||"Lainnya",
+    id:r.id,code:r.inventory_code,name:r.device_name,publicQrEnabled:!!r.public_qr_enabled,category:r.device_categories?.name||categories.find(c=>c.id===r.category_id)?.name||"Lainnya",
     model:[r.brand,r.model].filter(Boolean).join(" ")||"",serial:r.serial_number||"",condition:uiCondition(r.condition),status:uiStatus(r.status),
     location:r.location||"",owner:(r.notes||"").startsWith("Penanggung jawab: ")?(r.notes||"").slice("Penanggung jawab: ".length):"",date:r.purchase_date||"",notes:r.notes||"",
     docs:docs.filter(d=>d.device_id===r.id).map(d=>[d.document_type,d.file_name,d.storage_path,d.id]),
@@ -333,17 +344,35 @@ function exportPDF(){
 let activeQRDevice=null;
 function deviceQRUrl(device){
   // UUID database menjadi identitas stabil; setelah dipindai, aplikasi akan meminta login seperti biasa.
-  const url=new URL(window.location.href);url.searchParams.set("device",device.id);url.hash="";return url.toString();
+  const url=new URL(window.location.href);url.searchParams.delete("device");url.searchParams.set(device.publicQrEnabled?"public_device":"device",device.id);if(device.publicQrEnabled)url.searchParams.delete("device");else url.searchParams.delete("public_device");url.hash="";return url.toString();
 }
 function openDeviceQR(){
   if(!current){toast("Pilih perangkat terlebih dahulu.");return}
   activeQRDevice=current;
+  const pubBtn=$("togglePublicQR");if(pubBtn){pubBtn.textContent=current.publicQrEnabled?"Nonaktifkan halaman publik":"Aktifkan halaman publik";pubBtn.disabled=false;}
   $("qrDeviceName").textContent=current.name||"Perangkat SIMATEL";
   $("qrDeviceCode").textContent="Kode inventaris: "+current.code;
   const host=$("qrCanvas");host.replaceChildren();
   if(!window.QRCode){host.textContent="QR Code belum termuat. Periksa koneksi internet, lalu buka kembali.";toast("Komponen QR Code belum termuat.");return}
   new QRCode(host,{text:deviceQRUrl(current),width:220,height:220,colorDark:"#0c1c33",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
   $("qrModal").classList.add("show");
+}
+async function toggleDevicePublicQR(){
+  if(!activeQRDevice||!db){toast("Pilih perangkat dan pastikan database terhubung.");return}
+  const next=!activeQRDevice.publicQrEnabled;const btn=$("togglePublicQR");
+  if(btn){btn.disabled=true;btn.textContent="Menyimpan..."}
+  const {error}=await db.from("devices").update({public_qr_enabled:next}).eq("id",activeQRDevice.id).select("id").maybeSingle();
+  if(error){console.error(error);toast("Gagal mengubah izin QR publik. Pastikan SQL QR publik sudah diterapkan dan akun berwenang.");if(btn){btn.disabled=false;btn.textContent=activeQRDevice.publicQrEnabled?"Nonaktifkan halaman publik":"Aktifkan halaman publik"}return}
+  activeQRDevice.publicQrEnabled=next;const local=assets.find(a=>a.id===activeQRDevice.id);if(local)local.publicQrEnabled=next;
+  if(btn){btn.disabled=false;btn.textContent=next?"Nonaktifkan halaman publik":"Aktifkan halaman publik"}
+  const host=$("qrCanvas");host.replaceChildren();new QRCode(host,{text:deviceQRUrl(activeQRDevice),width:220,height:220,colorDark:"#145236",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
+  toast(next?"Halaman publik diaktifkan. QR hanya menampilkan informasi terbatas.":"Halaman publik dinonaktifkan.");
+}
+function showPublicPage(){
+  const id=new URLSearchParams(window.location.search).get("public_device");if(!id)return false;
+  document.querySelector(".app").style.display="none";const login=$("simatelLogin");if(login)login.style.display="none";$("publicDevicePage").style.display="flex";
+  if(!db){$("publicDeviceState").textContent="Informasi belum dapat dimuat.";return true}
+  (async()=>{const {data,error}=await db.rpc("simatel_public_device_info",{p_device_id:id});const state=$("publicDeviceState"),fields=$("publicDeviceFields");if(error||!data||!data.length){state.textContent="Perangkat tidak ditemukan atau informasi publik tidak diaktifkan.";fields.replaceChildren();return}const d=Array.isArray(data)?data[0]:data;state.textContent="Informasi perangkat yang disetujui untuk publikasi";fields.innerHTML=[["Kode inventaris",d.inventory_code],["Nama perangkat",d.device_name],["Kategori",d.category_name]].filter(([k,v])=>v).map(([k,v])=>`<div class="public-field"><div class="public-label">${esc(k)}</div><div class="public-value">${esc(v)}</div></div>`).join("")})();return true;
 }
 function downloadDeviceQR(){
   const host=$("qrCanvas"),img=host.querySelector("img"),canvas=host.querySelector("canvas");
@@ -469,7 +498,8 @@ function openEdit(){
   f.status.value=current.status||"Tersedia";
   $("editModal").classList.add("show");
 }
-function openDoc(){$("docForm").reset();$("docModal").classList.add("show")}
+function openDoc(){$("docForm").reset();$("docModal").querySelector("h2").textContent="Tambah dokumentasi";$("docForm").elements.type.value="Foto perangkat";$("docModal").classList.add("show")}
+function openDevicePhoto(){if(!current){toast("Pilih perangkat terlebih dahulu.");return}openDoc();$("docModal").querySelector("h2").textContent="Tambah/Ubah foto perangkat";$("docForm").elements.type.value="Foto perangkat";$("docForm").elements.name.value="Foto perangkat - "+current.name;$("docForm").elements.file.accept="image/jpeg,image/png,image/webp";$("docForm").elements.file.required=true;}
 function closeModal(id){$(id).classList.remove("show")}
 $("addForm").onsubmit=async e=>{
   e.preventDefault();const f=Object.fromEntries(new FormData(e.target));
@@ -535,7 +565,7 @@ async function startApp(){
   try{await getCategories();await loadAssets();openDeviceFromQR();$("pageTitle").textContent="Dashboard";$("crumb").textContent="Dashboard";$("listPage").querySelector(".notice").textContent="Terhubung ke database SIMATEL. Gunakan hanya data yang telah disetujui untuk sistem ini."}
   catch(err){console.error(err);toast("Gagal memuat data. Periksa tabel, relasi, dan policy Supabase.")}
 }
-if(supabaseReady){startApp();db.auth.onAuthStateChange((_event,session)=>{if(!session){const p=$("simatelLogin");if(p)p.style.display="flex"}})}
-else{showLogin("Isi SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY pada bagian awal kode sebelum digunakan.")}
+if(supabaseReady){if(!showPublicPage()){startApp();db.auth.onAuthStateChange((_event,session)=>{if(!session){const p=$("simatelLogin");if(p)p.style.display="flex"}})}}
+else{if(!showPublicPage())showLogin("Isi SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY pada bagian awal kode sebelum digunakan.")}
 </script>
 </body></html>
