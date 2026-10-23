@@ -92,6 +92,17 @@ body[data-theme="dark"] .dash-card,body[data-theme="dark"] .dash-stat{background
 @media(max-width:900px){.dash-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-columns{grid-template-columns:1fr}.dash-welcome{padding:20px}}
 @media(max-width:560px){.dash-welcome{align-items:flex-start;flex-direction:column}.dash-welcome h2{font-size:21px}.dash-stats{gap:9px}.dash-stat{padding:13px}.dash-stat .statnum{font-size:24px}}
 
+
+/* Modern green login screen, aligned with SIMATEL brand palette */
+.simatel-login-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 15% 10%,#d9f0e1 0%,transparent 38%),linear-gradient(135deg,#eff7f1 0%,#f4f7fb 52%,#e5f2e9 100%);overflow:auto}
+.login-shell{position:relative;display:grid;grid-template-columns: .92fr 1.08fr;width:min(900px,100%);min-height:540px;background:#fff;border:1px solid #dcebe0;border-radius:24px;overflow:hidden;box-shadow:0 28px 85px #174d3022}
+.login-brand-panel{position:relative;isolation:isolate;overflow:hidden;padding:44px 38px;color:#fff;background:linear-gradient(145deg,#124a2f 0%,#1b7043 52%,#258653 100%);display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.login-brand-panel:before{content:"";position:absolute;z-index:-1;width:330px;height:330px;border:1px solid #ffffff20;border-radius:50%;right:-150px;bottom:-110px;box-shadow:0 0 0 28px #ffffff08,0 0 0 58px #ffffff06}
+.login-brand-mark,.login-mobile-mark{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:#ffffff1c;border:1px solid #ffffff40;color:#fff;font-size:23px;font-weight:900;box-shadow:inset 0 1px #ffffff22}
+.login-brand-name{font-size:29px;letter-spacing:2px;font-weight:900;margin-top:22px}.login-brand-sub{font-size:11px;line-height:1.7;color:#d7f0df;max-width:240px;margin-top:5px}.login-brand-rule{width:46px;height:3px;border-radius:5px;background:#a8e2b9;margin:30px 0 21px}.login-brand-office{font-size:11px;font-weight:800;letter-spacing:1.5px;line-height:1.9}.login-brand-caption{font-size:12px;line-height:1.8;color:#d9f0e1;max-width:285px;margin-top:16px}.login-orbit{position:absolute;border:1px solid #ffffff20;border-radius:50%;pointer-events:none}.orbit-one{width:190px;height:190px;right:-85px;top:45px}.orbit-two{width:115px;height:115px;right:-47px;top:83px}
+.login-form-panel{padding:48px 46px 30px;display:flex;flex-direction:column;justify-content:center;min-width:0}.login-eyebrow{font-size:10px;letter-spacing:1.8px;color:#258653;font-weight:850}.login-form-panel h2{font-size:29px;letter-spacing:-.7px;color:#173b29;margin:10px 0 7px}.login-subtitle{font-size:13px;color:#718078;margin:0 0 22px}.login-form-panel label{font-size:12px;font-weight:700;color:#344c3d;margin:15px 0 7px}.login-input-wrap{display:flex;align-items:center;gap:10px;border:1px solid #d5e4d9;border-radius:10px;padding:0 13px;background:#fbfdfb;transition:border-color .2s,box-shadow .2s}.login-input-wrap:focus-within{border-color:#258653;box-shadow:0 0 0 3px #25865318}.login-input-wrap>span{font-size:15px;color:#6e9c7d;width:17px;text-align:center}.login-input-wrap input{width:100%;min-width:0;padding:13px 0;border:0;outline:0;background:transparent;color:#183b29;font:inherit;font-size:13px}.login-input-wrap input::placeholder{color:#a2b2a6}.login-submit{margin-top:24px;display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:10px;padding:14px 17px;background:linear-gradient(110deg,#1b7043,#258653);color:#fff;font-weight:750;box-shadow:0 7px 16px #25865326;transition:transform .15s,box-shadow .15s}.login-submit:hover{transform:translateY(-1px);box-shadow:0 10px 22px #25865338}.login-submit:disabled{opacity:.7;cursor:wait;transform:none}.login-message{font-size:12px;color:#946200;line-height:1.5}.login-message:empty{display:none}.login-security{display:flex;align-items:flex-start;gap:9px;margin-top:20px;padding:12px;border-radius:9px;background:#f0f8f2;color:#5d7765;font-size:10px;line-height:1.7}.login-security>span:first-child{color:#258653;font-size:14px}.login-footer{margin-top:22px;padding-top:15px;border-top:1px solid #edf2ee;color:#91a197;font-size:10px}.login-mobile-mark{display:none}
+@media(max-width:700px){.simatel-login-overlay{padding:14px}.login-shell{grid-template-columns:1fr;width:min(460px,100%);min-height:0;border-radius:20px}.login-brand-panel{display:none}.login-form-panel{padding:30px 25px 23px}.login-mobile-mark{display:grid;width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#1b7043,#258653);margin-bottom:20px}.login-form-panel h2{font-size:25px}.login-footer{margin-top:18px}}
+
 </style>
 </head>
 <body data-theme="light">
@@ -211,18 +222,32 @@ function showLogin(message="Silakan login dengan akun SIMATEL yang telah dibuat 
   let panel=$("simatelLogin");
   if(!panel){
     panel=document.createElement("div");panel.id="simatelLogin";
-    panel.style.cssText="position:fixed;inset:0;background:#081629ee;z-index:100;display:flex;align-items:center;justify-content:center;padding:18px";
-    panel.innerHTML=`<form id="simatelLoginForm" style="background:white;padding:28px;border-radius:14px;width:min(420px,100%);box-shadow:0 25px 80px #0005">
-      <div style="font-weight:900;letter-spacing:1px;color:#142943;font-size:22px">SIMATEL</div>
-      <p style="color:#718096;margin-top:5px">Login petugas internal</p>
-      <div id="loginMessage" style="font-size:12px;color:#946200;margin:12px 0"></div>
-      <label style="display:block;font-size:12px;margin:12px 0 5px">Email</label>
-      <input name="email" type="email" required autocomplete="username" style="width:100%;padding:11px;border:1px solid #d6deea;border-radius:7px">
-      <label style="display:block;font-size:12px;margin:12px 0 5px">Kata sandi</label>
-      <input name="password" type="password" required autocomplete="current-password" style="width:100%;padding:11px;border:1px solid #d6deea;border-radius:7px">
-      <button type="submit" style="margin-top:18px;width:100%;padding:12px;border:0;border-radius:8px;background:#193250;color:white;font-weight:700">Masuk</button>
-      <p style="font-size:11px;color:#718096;line-height:1.5">Akun dibuat oleh administrator. Jangan gunakan data perangkat nyata sebelum pengujian akses selesai.</p>
-    </form>`;
+    panel.className="simatel-login-overlay";
+    panel.innerHTML=`<div class="login-shell">
+      <div class="login-brand-panel">
+        <div class="login-brand-mark">S</div>
+        <div class="login-brand-name">SIMATEL</div>
+        <div class="login-brand-sub">Sistem Informasi Manajemen Aset Teknologi</div>
+        <div class="login-brand-rule"></div>
+        <div class="login-brand-office">KEJAKSAAN TINGGI<br>KALIMANTAN TENGAH</div>
+        <div class="login-brand-caption">Pusat pengelolaan inventaris dan dokumentasi perangkat teknologi informasi.</div>
+        <div class="login-orbit orbit-one"></div><div class="login-orbit orbit-two"></div>
+      </div>
+      <form id="simatelLoginForm" class="login-form-panel">
+        <div class="login-mobile-mark">S</div>
+        <div class="login-eyebrow">AKSES INTERNAL</div>
+        <h2>Selamat datang</h2>
+        <p class="login-subtitle">Masuk menggunakan akun petugas SIMATEL Anda.</p>
+        <div id="loginMessage" class="login-message"></div>
+        <label for="simatelEmail">Email</label>
+        <div class="login-input-wrap"><span aria-hidden="true">✉</span><input id="simatelEmail" name="email" type="email" required autocomplete="username" placeholder="nama@kejaksaan.go.id"></div>
+        <label for="simatelPassword">Kata sandi</label>
+        <div class="login-input-wrap"><span aria-hidden="true">♙</span><input id="simatelPassword" name="password" type="password" required autocomplete="current-password" placeholder="Masukkan kata sandi"></div>
+        <button type="submit" class="login-submit"><span>Masuk ke SIMATEL</span><span aria-hidden="true">→</span></button>
+        <div class="login-security"><span>▣</span><span>Akses terbatas untuk petugas yang memiliki akun resmi. Jangan gunakan data perangkat nyata sebelum pengujian akses selesai.</span></div>
+        <div class="login-footer">© SIMATEL · Kejati Kalimantan Tengah</div>
+      </form>
+    </div>`;
     document.body.appendChild(panel);
     $("simatelLoginForm").addEventListener("submit",async e=>{
       e.preventDefault();
