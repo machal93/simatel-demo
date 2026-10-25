@@ -113,6 +113,24 @@ body[data-theme="dark"] .dash-card,body[data-theme="dark"] .dash-stat{background
 .component-stat small{display:block;color:var(--muted);font-size:10px}.component-stat b{display:block;font-size:21px;margin-top:5px}
 .component-table-wrap{overflow:auto}.component-table{width:100%;border-collapse:collapse;min-width:760px}.component-table th{background:var(--soft);color:var(--muted);font-size:10px;letter-spacing:.5px;text-align:left;padding:11px 12px}.component-table td{padding:12px;border-top:1px solid var(--line);font-size:12px;vertical-align:top}.component-title{font-weight:750}.component-name-wrap{display:flex;align-items:flex-start;gap:10px;min-width:180px}.component-thumb{width:64px;height:64px;flex:0 0 64px;object-fit:cover;border:1px solid var(--line);border-radius:9px;background:var(--soft);cursor:pointer}.component-thumb-placeholder{width:64px;height:64px;flex:0 0 64px;display:grid;place-items:center;border:1px dashed var(--line);border-radius:9px;background:var(--soft);color:var(--muted);font-size:10px;text-align:center}.component-name-details{min-width:0}.component-code{font-family:ui-monospace,Consolas,monospace;color:var(--muted);font-size:11px}.component-actions{display:flex;gap:5px;flex-wrap:wrap}.component-actions .btn{white-space:nowrap}.component-doc-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.component-doc-chip{display:inline-flex;gap:5px;align-items:center;background:var(--greenbg);color:var(--green);border-radius:7px;padding:5px 7px;font-size:10px}.component-empty{padding:18px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px;text-align:center}.component-history-item{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}.component-history-item:last-child{border-bottom:0}.component-history-icon{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:var(--greenbg);color:var(--green);display:grid;place-items:center}.component-history-item small{display:block;color:var(--muted);margin-top:4px;font-size:11px}
 @media(max-width:650px){.component-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* SIMATEL navigation usability: resize sidebar and keep a direct path to dashboard */
+body.simatel-sidebar-expanded .app{grid-template-columns:260px minmax(0,1fr)!important}
+body.simatel-sidebar-expanded .sidebar{padding-left:16px!important;padding-right:16px!important}
+#simatelUserControls{flex-wrap:wrap;justify-content:flex-end;max-width:100%}
+#simatelHomeButton{white-space:nowrap}
+@media(max-width:620px){
+ #simatelUserControls{gap:5px!important;justify-content:flex-start}
+ #simatelHomeButton{font-size:12px;padding:8px 9px}
+ #simatelSidebarToggle{font-size:16px;padding:7px 10px}
+ body.simatel-sidebar-expanded .app{grid-template-columns:minmax(0,1fr)!important}
+ body.simatel-sidebar-expanded .sidebar{display:flex!important;position:relative!important;width:100%!important;padding:10px!important;max-height:42vh;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}
+ body.simatel-sidebar-expanded .brand{justify-content:flex-start!important;padding:4px 8px 10px!important}
+ body.simatel-sidebar-expanded .brandtext,body.simatel-sidebar-expanded .navtitle,body.simatel-sidebar-expanded .nav span:not(.ico),body.simatel-sidebar-expanded .sidebottom{display:block!important}
+ body.simatel-sidebar-expanded .nav{justify-content:flex-start!important;padding:9px 10px!important}
+ .topbar{gap:10px;flex-wrap:wrap}
+}
+
 </style>
 <style>/* Official crest identity */
 .crest{background:transparent!important;box-shadow:none!important;border:0!important;border-radius:0!important;width:46px;height:52px;flex:0 0 46px;padding:0!important}
@@ -301,6 +319,7 @@ body[data-theme="dark"] .dash-card,body[data-theme="dark"] .dash-stat{background
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <script>
 /*
  SIMATEL Supabase integration.
@@ -387,10 +406,15 @@ function ensureHeaderControls(){
   const right=document.querySelector(".topright");
   if(!right || $("simatelUserControls"))return;
   const controls=document.createElement("div");controls.id="simatelUserControls";controls.style.cssText="display:flex;gap:8px;align-items:center";
-  controls.innerHTML='<button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut" type="button">↪ Keluar</button>'; 
+  controls.innerHTML='<button class="btn small" id="simatelHomeButton" type="button" title="Kembali ke menu utama">⌂ Menu utama</button><button class="btn small" id="simatelSidebarToggle" type="button" title="Perbesar/perkecil menu samping" aria-label="Perbesar/perkecil menu samping">☰</button><button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut" type="button">↪ Keluar</button>'; 
   const savedTheme=(()=>{try{return localStorage.getItem("simatel-theme")||"light"}catch(e){return "light"}})();
   right.prepend(controls);
   applySimatelTheme(savedTheme);
+  const homeButton=$("simatelHomeButton");
+  if(homeButton)homeButton.onclick=()=>showDashboard();
+  const sidebarToggle=$("simatelSidebarToggle");
+  if(sidebarToggle)sidebarToggle.onclick=()=>{document.body.classList.toggle("simatel-sidebar-expanded");try{localStorage.setItem("simatel-sidebar-expanded",document.body.classList.contains("simatel-sidebar-expanded")?"1":"0")}catch(e){}};
+  try{if(localStorage.getItem("simatel-sidebar-expanded")==="1")document.body.classList.add("simatel-sidebar-expanded")}catch(e){}
   const themeButton=$("simatelThemeToggle");
   if(themeButton) themeButton.onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
   const avatarButton=$("simatelAvatarAccount");
@@ -661,27 +685,31 @@ async function startInspectionScanner(){
   if(status)status.textContent="Kamera membutuhkan HTTPS atau localhost. Untuk sementara, masukkan kode inventaris secara manual.";
   if(wrap)wrap.classList.remove("hidden");return;
  }
- if(!("BarcodeDetector" in window)){
-  if(status)status.textContent="Pemindai QR bawaan tidak didukung browser ini. Masukkan kode inventaris secara manual atau gunakan Chrome terbaru.";
-  if(wrap)wrap.classList.remove("hidden");return;
- }
  try{
   stopInspectionScanner();if(wrap)wrap.classList.remove("hidden");
   if(status)status.textContent="Meminta izin kamera…";
-  inspectionStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false});
+  inspectionStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}},audio:false});
   if(!video)throw new Error("Elemen kamera tidak ditemukan.");
-  video.srcObject=inspectionStream;await video.play();
-  const detector=new BarcodeDetector({formats:["qr_code"]});inspectionLoopActive=true;
-  if(status)status.textContent="Arahkan kamera ke QR perangkat. Pemindaian berhenti setelah QR terbaca.";
+  video.setAttribute("playsinline","");video.muted=true;video.srcObject=inspectionStream;await video.play();
+  const nativeDetector=("BarcodeDetector" in window)?new BarcodeDetector({formats:["qr_code"]}):null;
+  const canvas=document.createElement("canvas"),ctx=canvas.getContext("2d",{willReadFrequently:true});
+  if(!nativeDetector && typeof window.jsQR!=="function")throw new Error("Pustaka pemindai QR belum termuat. Periksa koneksi internet lalu muat ulang halaman.");
+  inspectionLoopActive=true;
+  if(status)status.textContent="Arahkan QR ke dalam kamera, dekatkan perlahan, dan pastikan QR terlihat jelas.";
   const tick=async()=>{
    if(!inspectionLoopActive||!inspectionStream)return;
    try{
-    if(video.readyState>=2){
-     const codes=await detector.detect(video);
-     if(codes?.length){
-      const input=$("inspectionCode");if(input)input.value=codes[0].rawValue||"";
-      stopInspectionScanner();findInspectionAsset();return;
+    if(video.readyState>=2 && video.videoWidth>0 && video.videoHeight>0){
+     let raw="";
+     if(nativeDetector){const codes=await nativeDetector.detect(video);if(codes?.length)raw=codes[0].rawValue||"";}
+     else{
+      canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      const frame=ctx.getImageData(0,0,canvas.width,canvas.height);
+      const code=window.jsQR(frame.data,frame.width,frame.height,{inversionAttempts:"attemptBoth"});
+      if(code)raw=code.data||"";
      }
+     if(raw){const input=$("inspectionCode");if(input)input.value=raw;stopInspectionScanner();findInspectionAsset();return;}
     }
    }catch(e){console.warn("Pemindaian QR gagal pada frame ini:",e)}
    if(inspectionLoopActive)requestAnimationFrame(tick);
