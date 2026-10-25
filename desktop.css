@@ -1,0 +1,4 @@
+/* SIMATEL desktop presentation layer. Intentionally no overrides in phase 1. */
+@media (min-width: 761px) {
+  html { -webkit-text-size-adjust: 100%; }
+}

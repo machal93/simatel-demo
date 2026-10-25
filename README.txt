@@ -1,19 +1,13 @@
-SIMATEL — paket prototipe online
-=================================
+SIMATEL — Tahap 1 pemisahan lapisan tampilan
 
 Isi:
-- index.html : prototipe SIMATEL, data simulasi saja.
-
-Cara menerbitkan melalui Vercel:
-1. Buat repositori GitHub BARU bernama simatel-demo.
-2. Unggah index.html ke root repositori.
-3. Buka https://vercel.com/ lalu masuk dengan akun Anda.
-4. Pilih Add New > Project, lalu impor repositori simatel-demo.
-5. Untuk prototipe statis ini, biarkan pengaturan build default/kosong jika Vercel mengenalinya sebagai static site, lalu klik Deploy.
-6. Setelah deployment selesai, Vercel akan memberikan URL *.vercel.app.
+- index.html: salinan aplikasi yang diunggah, dengan link CSS terpisah ditambahkan.
+- desktop.css: lapisan CSS desktop terpisah.
+- mobile.css: lapisan CSS smartphone terpisah.
+- Logika JavaScript, autentikasi, fitur, dan konfigurasi Supabase di index.html tidak dipindahkan atau diubah.
 
 Penting:
-- Ini hanya prototipe frontend, bukan aplikasi produksi.
-- Tidak ada autentikasi sungguhan atau database terpusat.
-- Jangan masukkan data inventaris nyata, dokumen sensitif, username/password perangkat, atau informasi operasi.
-- Sebelum penggunaan instansi, siapkan login, kontrol akses, Supabase RLS, storage privat, audit log, dan persetujuan keamanan TI.
+- Ini adalah tahap awal yang konservatif, bukan pemisahan penuh seluruh HTML menjadi dua aplikasi.
+- Letakkan ketiga file di folder/deployment yang sama agar file CSS ditemukan.
+- Sebelum mengganti situs aktif, uji salinan di staging dan pastikan URL publik tetap HTTPS.
+- Tidak ada migrasi atau perubahan database.
