@@ -120,6 +120,77 @@ body[data-theme="dark"] .dash-card,body[data-theme="dark"] .dash-stat{background
 .login-brand-mark{width:94px;height:104px;background:transparent;border:0;box-shadow:none;border-radius:0}
 .login-mobile-mark{width:58px;height:66px;background:transparent;border:0;border-radius:0}
 </style>
+<style id="simatel-smartphone-fit-only">
+/* Penyesuaian ukuran layar saja: tidak mengubah struktur, menu, atau logika aplikasi. */
+html{width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-width:0;max-width:100%;overflow-x:hidden}
+.app,main,.card,.cardhead,.topbar,.topbar>div,.tablewrap,.component-table-wrap{min-width:0}
+img,svg,video,canvas,iframe{max-width:100%}
+input,select,textarea,button{max-width:100%}
+.tablewrap,.component-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:760px){
+  .app{grid-template-columns:1fr;min-height:100dvh}
+  .sidebar{display:none}
+  main{width:100%;padding:16px 12px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+  .topbar{align-items:flex-start;gap:10px;margin-bottom:16px}
+  .topbar>div:first-child{min-width:0;flex:1}
+  .topbar h1{font-size:clamp(20px,5.5vw,26px);line-height:1.2;overflow-wrap:anywhere}
+  .topbar .crumb{overflow-wrap:anywhere}
+  .topright{flex-shrink:0;gap:8px}
+  .gridstats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .stat{min-width:0;padding:12px}
+  .statnum{font-size:clamp(21px,6vw,27px);overflow-wrap:anywhere}
+  .dash-welcome{gap:12px;align-items:flex-start;flex-wrap:wrap}
+  .dash-welcome>div{min-width:0;flex:1 1 100%}
+  .dash-welcome h2{font-size:clamp(20px,5vw,26px);overflow-wrap:anywhere}
+  .dash-columns{grid-template-columns:minmax(0,1fr)!important}
+  .card{border-radius:10px;margin-bottom:14px}
+  .cardhead{padding:13px 12px;gap:9px;flex-wrap:wrap}
+  .cardhead>div{min-width:0;max-width:100%}
+  .filters{padding:11px 12px;gap:8px}
+  .filters input,.filters select{min-width:0;width:100%;flex:1 1 100%}
+  .footrow{gap:8px;flex-wrap:wrap;padding:12px}
+  .detailhead{gap:10px}
+  .detailhead h2{font-size:21px;overflow-wrap:anywhere}
+  .detailgrid{grid-template-columns:minmax(0,1fr)!important;gap:12px}
+  .deviceintro{flex-direction:column;gap:12px;padding:13px}
+  .devicepic{width:100%;min-height:120px}
+  .meta{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .docgrid{grid-template-columns:minmax(0,1fr)}
+  .doc{min-width:0;flex-wrap:wrap}
+  .docbody{min-width:0;overflow-wrap:anywhere}
+  .formgrid{grid-template-columns:minmax(0,1fr);padding:14px;gap:12px}
+  .field,.field.full{grid-column:1/-1;min-width:0}
+  .modalback{padding:10px;align-items:center}
+  .modal{width:100%;max-width:100%;max-height:calc(100dvh - 20px);border-radius:12px}
+  .modalhead,.modalfoot{padding:13px 14px;gap:8px;flex-wrap:wrap}
+  .modalfoot{justify-content:flex-end}
+  .previewback{padding:8px}
+  .previewpanel{width:100%;max-height:calc(100dvh - 16px)}
+  .previewcontent{padding:8px;max-height:calc(100dvh - 90px)}
+  .previewcontent iframe{height:65dvh}
+  .subhead{align-items:flex-start;flex-wrap:wrap}
+  .vaultrow{align-items:flex-start;flex-wrap:wrap}
+  .vaultrow .btn{margin-left:0}
+  .component-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .component-stat{padding:10px;min-width:0}
+  .component-stat b{font-size:19px;overflow-wrap:anywhere}
+  .component-actions{gap:5px}
+  .component-actions .btn,.btn{white-space:normal;overflow-wrap:anywhere}
+  .toast{left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));text-align:center}
+}
+@media(max-width:380px){
+  main{padding-left:9px;padding-right:9px}
+  .gridstats{gap:7px}
+  .stat{padding:10px}
+  .statlabel{font-size:11px}
+  .statnum{font-size:21px}
+  .dash-stat-top{gap:6px;flex-wrap:wrap}
+  .avatar{width:32px;height:32px}
+  .meta{grid-template-columns:minmax(0,1fr)}
+  .btn{padding:9px 10px}
+}
+</style>
 </head>
 <body data-theme="light">
 <section id="publicDevicePage" class="public-page"><div class="public-card"><div class="public-top"><small>KEJAKSAAN TINGGI KALIMANTAN TENGAH</small><h1 style="margin:8px 0 0;font-size:24px">SIMATEL</h1><div style="margin-top:5px">Informasi publik perangkat</div></div><div class="public-body"><div id="publicDeviceState" class="tiny">Memuat informasi perangkat...</div><div id="publicDeviceFields"></div><p class="public-note">Halaman ini hanya menampilkan kode inventaris, nama perangkat, dan kategori yang telah disetujui untuk publikasi. Informasi internal dan dokumen tidak ditampilkan.</p></div></div></section>
