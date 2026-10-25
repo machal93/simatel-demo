@@ -121,58 +121,34 @@ body[data-theme="dark"] .dash-card,body[data-theme="dark"] .dash-stat{background
 .login-mobile-mark{width:58px;height:66px;background:transparent;border:0;border-radius:0}
 </style>
 
-<style id="simatel-mobile-layout-hotfix">
-
-/* SIMATEL MOBILE HOTFIX — layout only; no application/database logic changed */
-@media screen and (max-width: 760px) {
-  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { width: 100%; max-width: 100%; overflow-x: clip; }
-  body { min-width: 0; }
-  .app { display: block !important; width: 100%; min-width: 0; min-height: 100vh; min-height: 100dvh; }
-  .sidebar { display: none !important; }
-  main { width: 100%; min-width: 0; max-width: 100%; padding: 12px 12px calc(28px + env(safe-area-inset-bottom)) !important; overflow: visible; }
-  .topbar { display: flex !important; flex-direction: column !important; align-items: stretch !important; justify-content: flex-start !important; gap: 12px !important; width: 100%; min-width: 0; padding: 14px 12px !important; margin: 0 0 16px !important; }
-  .topbar > div:first-child { width: 100%; min-width: 0; max-width: 100%; }
-  .topbar h1 { display: block; width: 100%; max-width: 100%; font-size: clamp(25px, 7vw, 34px) !important; line-height: 1.18 !important; letter-spacing: -.7px; white-space: normal; overflow-wrap: normal; word-break: normal; margin: 8px 0 10px !important; }
-  .topbar .crumb { max-width: 100%; overflow-wrap: anywhere; }
-  .topbar > div:first-child > div:last-child { max-width: 100%; font-size: 13px !important; line-height: 1.5; overflow-wrap: anywhere; }
-  .topright { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-end !important; flex-wrap: wrap !important; gap: 8px !important; width: 100%; min-width: 0; }
-  .topright > * { flex: 0 0 auto; }
-  .topright .role { display: block; max-width: 130px; overflow-wrap: anywhere; }
-  .topright button, .topright .btn { min-height: 42px; }
-  .gridstats, .dash-stats { display: grid !important; grid-template-columns: minmax(0, 1fr) !important; gap: 12px !important; width: 100%; min-width: 0; }
-  .stat, .card, .dash-stat, .dash-welcome { width: 100%; min-width: 0; max-width: 100%; }
-  .stat, .dash-stat { padding: 15px !important; }
-  .statnum { font-size: 25px !important; }
-  .dash-welcome { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 16px !important; padding: 20px 17px !important; margin-bottom: 14px !important; }
-  .dash-welcome > div { width: 100%; min-width: 0; }
-  .dash-welcome h2 { font-size: clamp(21px, 6vw, 27px) !important; line-height: 1.2 !important; overflow-wrap: anywhere; }
-  .dash-welcome p { font-size: 14px !important; line-height: 1.5 !important; overflow-wrap: anywhere; }
-  .dash-primary { align-self: flex-start; max-width: 100%; white-space: normal; }
-  .cardhead { min-width: 0; flex-wrap: wrap; padding: 15px !important; }
-  .detailhead, .deviceintro { flex-direction: column !important; align-items: stretch !important; }
-  .devicepic { width: 100% !important; max-width: 100%; }
-  .docgrid, .formgrid, .detailgrid { grid-template-columns: minmax(0, 1fr) !important; }
-  .field, .field input, .field select, input, select, textarea { min-width: 0; max-width: 100%; }
-  input, select, textarea, button { font-size: 16px; }
-  .table-wrap, .table-responsive, .table-container, .card table { max-width: 100%; }
-  .table-wrap, .table-responsive, .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  table { max-width: 100%; }
-  .modal { width: calc(100% - 20px) !important; max-width: calc(100% - 20px) !important; max-height: calc(100dvh - 24px - env(safe-area-inset-bottom)); overflow: auto; }
-  img, video, canvas, iframe { max-width: 100%; }
-  .toast { left: 12px; right: 12px; bottom: calc(16px + env(safe-area-inset-bottom)); max-width: calc(100% - 24px); }
+<style id="simatel-mobile-navigation-fix">
+.simatel-mobile-controls{display:none}
+@media(max-width:620px){
+ .simatel-mobile-controls{display:flex;gap:8px;align-items:center;position:sticky;top:0;z-index:100;background:var(--bg);padding:8px 0;margin:0 0 10px;border-bottom:1px solid var(--line)}
+ .simatel-mobile-btn{min-height:42px;border:1px solid var(--line);border-radius:11px;padding:9px 13px;background:var(--white);color:var(--text);font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+ .simatel-home-btn{background:var(--green);border-color:var(--green);color:#fff;margin-left:auto}
+ .app{display:block!important;min-width:0;width:100%;overflow-x:clip}
+ .sidebar{display:none!important;width:100%;max-height:55vh;overflow:auto;border:1px solid var(--line);border-radius:14px;padding:12px;margin:0 0 12px;background:var(--white);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+ .sidebar.simatel-mobile-open{display:flex!important}
+ .sidebar .brand{justify-content:flex-start;padding:4px 8px 12px}
+ .sidebar .brandtext,.sidebar .navtitle,.sidebar .sidebottom{display:block}
+ .sidebar .nav{display:flex;justify-content:flex-start;padding:12px;margin:3px 0;min-height:44px}
+ .sidebar .nav span:not(.ico){display:inline!important}
+ main{min-width:0;width:100%;padding:10px 12px calc(30px + env(safe-area-inset-bottom))!important}
+ .topbar{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:10px;min-width:0;width:100%;overflow-wrap:anywhere}
+ .topbar>div:first-child{min-width:0;width:100%}
+ .topbar h1{font-size:clamp(25px,7vw,34px)!important;line-height:1.2!important;white-space:normal;overflow-wrap:break-word;word-break:normal}
+ .topbar .crumb{overflow-wrap:anywhere}
+ .topright{display:flex!important;flex-wrap:wrap;gap:8px;justify-content:flex-start}
+ .gridstats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+ .gridstats>*{min-width:0;max-width:100%}
+ .card,.dash-welcome{min-width:0;max-width:100%}
+ .table-wrap,.table-responsive,.table-container{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+ input,select,textarea,button{font-size:16px}
+ .modal{max-width:calc(100vw - 20px);max-height:calc(100dvh - 24px - env(safe-area-inset-bottom));overflow:auto}
+ img,video,canvas,iframe{max-width:100%}
 }
-@media screen and (min-width: 421px) and (max-width: 760px) {
-  .gridstats, .dash-stats { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-}
-@media screen and (max-width: 360px) {
-  main { padding-left: 9px !important; padding-right: 9px !important; }
-  .topbar { padding: 12px 10px !important; }
-  .topright { justify-content: flex-start !important; }
-  .topright .role { max-width: 105px; }
-}
-
+@media(max-width:380px){.gridstats{grid-template-columns:minmax(0,1fr)!important}.simatel-mobile-btn{padding:8px 10px;font-size:13px}}
 </style>
 </head>
 <body data-theme="light">
@@ -577,60 +553,7 @@ async function exportPDF(){
       const compHeaders=["Kode induk","Perangkat induk","Kode komponen","Nama komponen","Merek/model","No. seri","Jumlah","Kondisi","Catatan","Dokumen"];
       const compRows=components.map(c=>[c.device?.code||c.device_id,c.device?.name,c.component_code,c.component_name,[c.brand,c.model].filter(Boolean).join(" "),c.serial_number,c.quantity,c.condition,c.notes,c.documentCount]);
       const w=window.open("","_blank");if(!w){toast("Izinkan pop-up untuk mencetak laporan PDF.");return;}
-      w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>SIMATEL - Laporan Inventaris</title><style>@page{size:A4 landscape;margin:12mm}body{font:10px Arial;color:#152238}h1{font-size:18px}h2{margin-top:24px;font-size:14px}p{font-size:10px}table{width:100%;border-collapse:collapse;margin-top:8px}th,td{border:1px solid #ccd4df;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e9eef4}tr{break-inside:avoid}.foot{margin-top:20px;color:#667085}@media print{button{display:none}}</style></head><body><h1>SIMATEL — Laporan Inventaris Perangkat</h1><p>Kejaksaan Tinggi Kalimantan Tengah · Dicetak ${escHtml(new Date().toLocaleString("id-ID"))}</p><p>Total perangkat induk: ${list.length} · Total komponen: ${components.length}</p><h2>Daftar Perangkat Induk</h2>${table(invHeaders,invRows)}<h2>Daftar Komponen dan Kondisi</h2>${table(compHeaders,compRows)}<p class="foot">Laporan internal SIMATEL</p><script>window.onload=()=>window.print()<\/script>
-<style id="simatel-mobile-navigation-fix">
-.simatel-mobile-controls{display:none}
-@media(max-width:620px){
- .simatel-mobile-controls{display:flex;gap:8px;align-items:center;position:sticky;top:0;z-index:100;background:var(--bg);padding:8px 0;margin:0 0 10px;border-bottom:1px solid var(--line)}
- .simatel-mobile-btn{min-height:42px;border:1px solid var(--line);border-radius:11px;padding:9px 13px;background:var(--white);color:var(--text);font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.04)}
- .simatel-home-btn{background:var(--green);border-color:var(--green);color:#fff;margin-left:auto}
- .app{display:block;min-width:0;width:100%;overflow-x:clip}
- .sidebar{display:none!important;width:100%;max-height:55vh;overflow:auto;border:1px solid var(--line);border-radius:14px;padding:12px;margin:0 0 12px;background:var(--white);box-shadow:0 8px 24px rgba(0,0,0,.08)}
- .sidebar.simatel-mobile-open{display:flex!important}
- .sidebar .brand{justify-content:flex-start;padding:4px 8px 12px}
- .sidebar .brandtext,.sidebar .navtitle,.sidebar .nav span:not(.ico),.sidebar .sidebottom{display:initial}
- .sidebar .nav{display:flex;justify-content:flex-start;padding:12px;margin:3px 0;min-height:44px}
- .sidebar .nav span:not(.ico){display:inline!important}
- main{min-width:0;width:100%;padding:10px 0 28px}
- .topbar{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:0;overflow-wrap:anywhere}
- .topbar>div:first-child{min-width:0;width:100%}
- .topbar h1{font-size:clamp(23px,6vw,30px);line-height:1.18;overflow-wrap:normal;word-break:normal;white-space:normal;margin:8px 0}
- .topbar .crumb{overflow-wrap:anywhere}
- .gridstats{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media(max-width:360px){.simatel-mobile-btn{padding:8px 10px;font-size:12px}.gridstats{grid-template-columns:minmax(0,1fr)}}
-</style>
-<script id="simatel-mobile-navigation-script">
-(function(){
- function initSimatelMobileNav(){
-  var toggle=document.getElementById('simatelMenuToggle');
-  var home=document.getElementById('simatelHomeButton');
-  var sidebar=document.querySelector('.sidebar');
-  if(!toggle||!home||!sidebar||toggle.dataset.bound==='1')return;
-  toggle.dataset.bound='1'; sidebar.id='simatelMobileMenu';
-  toggle.addEventListener('click',function(){
-   var opened=sidebar.classList.toggle('simatel-mobile-open');
-   toggle.setAttribute('aria-expanded',opened?'true':'false');
-   toggle.textContent=opened?'✕ Tutup menu':'☰ Menu utama';
-  });
-  home.addEventListener('click',function(){
-   if(typeof window.showDashboard==='function')window.showDashboard();
-   sidebar.classList.remove('simatel-mobile-open');
-   toggle.setAttribute('aria-expanded','false');toggle.textContent='☰ Menu utama';
-   window.scrollTo({top:0,behavior:'smooth'});
-  });
-  sidebar.addEventListener('click',function(e){
-   if(e.target.closest('.nav')){
-    sidebar.classList.remove('simatel-mobile-open');
-    toggle.setAttribute('aria-expanded','false');toggle.textContent='☰ Menu utama';
-   }
-  });
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initSimatelMobileNav);else initSimatelMobileNav();
-})();
-</script>
-
-</body></html>`);w.document.close();return;
+      w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>SIMATEL - Laporan Inventaris</title><style>@page{size:A4 landscape;margin:12mm}body{font:10px Arial;color:#152238}h1{font-size:18px}h2{margin-top:24px;font-size:14px}p{font-size:10px}table{width:100%;border-collapse:collapse;margin-top:8px}th,td{border:1px solid #ccd4df;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e9eef4}tr{break-inside:avoid}.foot{margin-top:20px;color:#667085}@media print{button{display:none}}</style></head><body><h1>SIMATEL — Laporan Inventaris Perangkat</h1><p>Kejaksaan Tinggi Kalimantan Tengah · Dicetak ${escHtml(new Date().toLocaleString("id-ID"))}</p><p>Total perangkat induk: ${list.length} · Total komponen: ${components.length}</p><h2>Daftar Perangkat Induk</h2>${table(invHeaders,invRows)}<h2>Daftar Komponen dan Kondisi</h2>${table(compHeaders,compRows)}<p class="foot">Laporan internal SIMATEL</p><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close();return;
     }
     const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
     const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight(),stamp=new Date().toLocaleString("id-ID");
@@ -1169,7 +1092,31 @@ async function startApp(){
 if(supabaseReady){if(!showPublicPage()){startApp();db.auth.onAuthStateChange((_event,session)=>{if(!session){const p=$("simatelLogin");if(p)p.style.display="flex"}})}}
 else{if(!showPublicPage())showLogin("Isi SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY pada bagian awal kode sebelum digunakan.")}
 </script>
-</body></html>
 
-/* Header account shortcut: avatar replaces separate Akun button; internal badge removed */
-.avatar{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}.avatar:hover{transform:translateY(-1px);box-shadow:0 3px 10px #25865322}.avatar:focus-visible{outline:3px solid #25865355;outline-offset:3px}
+<script id="simatel-mobile-navigation-script">
+(function(){
+ function init(){
+  var toggle=document.getElementById('simatelMenuToggle');
+  var home=document.getElementById('simatelHomeButton');
+  var sidebar=document.querySelector('.sidebar');
+  if(!toggle||!home||!sidebar||toggle.dataset.bound==='1')return;
+  toggle.dataset.bound='1'; sidebar.id='simatelMobileMenu';
+  toggle.addEventListener('click',function(){
+   var opened=sidebar.classList.toggle('simatel-mobile-open');
+   toggle.setAttribute('aria-expanded',opened?'true':'false');
+   toggle.textContent=opened?'✕ Tutup menu':'☰ Menu utama';
+  });
+  home.addEventListener('click',function(){
+   if(typeof window.showDashboard==='function')window.showDashboard();
+   sidebar.classList.remove('simatel-mobile-open');
+   toggle.setAttribute('aria-expanded','false');toggle.textContent='☰ Menu utama';
+   window.scrollTo({top:0,behavior:'smooth'});
+  });
+  sidebar.addEventListener('click',function(e){
+   if(e.target.closest('.nav')){sidebar.classList.remove('simatel-mobile-open');toggle.setAttribute('aria-expanded','false');toggle.textContent='☰ Menu utama';}
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+</body></html>
