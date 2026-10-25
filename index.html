@@ -121,8 +121,59 @@ body[data-theme="dark"] .dash-card,body[data-theme="dark"] .dash-stat{background
 .login-mobile-mark{width:58px;height:66px;background:transparent;border:0;border-radius:0}
 </style>
 
-<link rel="stylesheet" href="./desktop.css" media="(min-width: 761px)">
-<link rel="stylesheet" href="./mobile.css" media="(max-width: 760px)">
+<style id="simatel-mobile-layout-hotfix">
+
+/* SIMATEL MOBILE HOTFIX — layout only; no application/database logic changed */
+@media screen and (max-width: 760px) {
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { width: 100%; max-width: 100%; overflow-x: clip; }
+  body { min-width: 0; }
+  .app { display: block !important; width: 100%; min-width: 0; min-height: 100vh; min-height: 100dvh; }
+  .sidebar { display: none !important; }
+  main { width: 100%; min-width: 0; max-width: 100%; padding: 12px 12px calc(28px + env(safe-area-inset-bottom)) !important; overflow: visible; }
+  .topbar { display: flex !important; flex-direction: column !important; align-items: stretch !important; justify-content: flex-start !important; gap: 12px !important; width: 100%; min-width: 0; padding: 14px 12px !important; margin: 0 0 16px !important; }
+  .topbar > div:first-child { width: 100%; min-width: 0; max-width: 100%; }
+  .topbar h1 { display: block; width: 100%; max-width: 100%; font-size: clamp(25px, 7vw, 34px) !important; line-height: 1.18 !important; letter-spacing: -.7px; white-space: normal; overflow-wrap: normal; word-break: normal; margin: 8px 0 10px !important; }
+  .topbar .crumb { max-width: 100%; overflow-wrap: anywhere; }
+  .topbar > div:first-child > div:last-child { max-width: 100%; font-size: 13px !important; line-height: 1.5; overflow-wrap: anywhere; }
+  .topright { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-end !important; flex-wrap: wrap !important; gap: 8px !important; width: 100%; min-width: 0; }
+  .topright > * { flex: 0 0 auto; }
+  .topright .role { display: block; max-width: 130px; overflow-wrap: anywhere; }
+  .topright button, .topright .btn { min-height: 42px; }
+  .gridstats, .dash-stats { display: grid !important; grid-template-columns: minmax(0, 1fr) !important; gap: 12px !important; width: 100%; min-width: 0; }
+  .stat, .card, .dash-stat, .dash-welcome { width: 100%; min-width: 0; max-width: 100%; }
+  .stat, .dash-stat { padding: 15px !important; }
+  .statnum { font-size: 25px !important; }
+  .dash-welcome { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 16px !important; padding: 20px 17px !important; margin-bottom: 14px !important; }
+  .dash-welcome > div { width: 100%; min-width: 0; }
+  .dash-welcome h2 { font-size: clamp(21px, 6vw, 27px) !important; line-height: 1.2 !important; overflow-wrap: anywhere; }
+  .dash-welcome p { font-size: 14px !important; line-height: 1.5 !important; overflow-wrap: anywhere; }
+  .dash-primary { align-self: flex-start; max-width: 100%; white-space: normal; }
+  .cardhead { min-width: 0; flex-wrap: wrap; padding: 15px !important; }
+  .detailhead, .deviceintro { flex-direction: column !important; align-items: stretch !important; }
+  .devicepic { width: 100% !important; max-width: 100%; }
+  .docgrid, .formgrid, .detailgrid { grid-template-columns: minmax(0, 1fr) !important; }
+  .field, .field input, .field select, input, select, textarea { min-width: 0; max-width: 100%; }
+  input, select, textarea, button { font-size: 16px; }
+  .table-wrap, .table-responsive, .table-container, .card table { max-width: 100%; }
+  .table-wrap, .table-responsive, .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { max-width: 100%; }
+  .modal { width: calc(100% - 20px) !important; max-width: calc(100% - 20px) !important; max-height: calc(100dvh - 24px - env(safe-area-inset-bottom)); overflow: auto; }
+  img, video, canvas, iframe { max-width: 100%; }
+  .toast { left: 12px; right: 12px; bottom: calc(16px + env(safe-area-inset-bottom)); max-width: calc(100% - 24px); }
+}
+@media screen and (min-width: 421px) and (max-width: 760px) {
+  .gridstats, .dash-stats { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media screen and (max-width: 360px) {
+  main { padding-left: 9px !important; padding-right: 9px !important; }
+  .topbar { padding: 12px 10px !important; }
+  .topright { justify-content: flex-start !important; }
+  .topright .role { max-width: 105px; }
+}
+
+</style>
 </head>
 <body data-theme="light">
 <section id="publicDevicePage" class="public-page"><div class="public-card"><div class="public-top"><small>KEJAKSAAN TINGGI KALIMANTAN TENGAH</small><h1 style="margin:8px 0 0;font-size:24px">SIMATEL</h1><div style="margin-top:5px">Informasi publik perangkat</div></div><div class="public-body"><div id="publicDeviceState" class="tiny">Memuat informasi perangkat...</div><div id="publicDeviceFields"></div><p class="public-note">Halaman ini hanya menampilkan kode inventaris, nama perangkat, dan kategori yang telah disetujui untuk publikasi. Informasi internal dan dokumen tidak ditampilkan.</p></div></div></section>
