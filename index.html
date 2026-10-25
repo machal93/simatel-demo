@@ -113,24 +113,6 @@ body[data-theme="dark"] .dash-card,body[data-theme="dark"] .dash-stat{background
 .component-stat small{display:block;color:var(--muted);font-size:10px}.component-stat b{display:block;font-size:21px;margin-top:5px}
 .component-table-wrap{overflow:auto}.component-table{width:100%;border-collapse:collapse;min-width:760px}.component-table th{background:var(--soft);color:var(--muted);font-size:10px;letter-spacing:.5px;text-align:left;padding:11px 12px}.component-table td{padding:12px;border-top:1px solid var(--line);font-size:12px;vertical-align:top}.component-title{font-weight:750}.component-name-wrap{display:flex;align-items:flex-start;gap:10px;min-width:180px}.component-thumb{width:64px;height:64px;flex:0 0 64px;object-fit:cover;border:1px solid var(--line);border-radius:9px;background:var(--soft);cursor:pointer}.component-thumb-placeholder{width:64px;height:64px;flex:0 0 64px;display:grid;place-items:center;border:1px dashed var(--line);border-radius:9px;background:var(--soft);color:var(--muted);font-size:10px;text-align:center}.component-name-details{min-width:0}.component-code{font-family:ui-monospace,Consolas,monospace;color:var(--muted);font-size:11px}.component-actions{display:flex;gap:5px;flex-wrap:wrap}.component-actions .btn{white-space:nowrap}.component-doc-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.component-doc-chip{display:inline-flex;gap:5px;align-items:center;background:var(--greenbg);color:var(--green);border-radius:7px;padding:5px 7px;font-size:10px}.component-empty{padding:18px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px;text-align:center}.component-history-item{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}.component-history-item:last-child{border-bottom:0}.component-history-icon{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:var(--greenbg);color:var(--green);display:grid;place-items:center}.component-history-item small{display:block;color:var(--muted);margin-top:4px;font-size:11px}
 @media(max-width:650px){.component-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-/* SIMATEL navigation usability: resize sidebar and keep a direct path to dashboard */
-body.simatel-sidebar-expanded .app{grid-template-columns:260px minmax(0,1fr)!important}
-body.simatel-sidebar-expanded .sidebar{padding-left:16px!important;padding-right:16px!important}
-#simatelUserControls{flex-wrap:wrap;justify-content:flex-end;max-width:100%}
-#simatelHomeButton{white-space:nowrap}
-@media(max-width:620px){
- #simatelUserControls{gap:5px!important;justify-content:flex-start}
- #simatelHomeButton{font-size:12px;padding:8px 9px}
- #simatelSidebarToggle{font-size:16px;padding:7px 10px}
- body.simatel-sidebar-expanded .app{grid-template-columns:minmax(0,1fr)!important}
- body.simatel-sidebar-expanded .sidebar{display:flex!important;position:relative!important;width:100%!important;padding:10px!important;max-height:42vh;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}
- body.simatel-sidebar-expanded .brand{justify-content:flex-start!important;padding:4px 8px 10px!important}
- body.simatel-sidebar-expanded .brandtext,body.simatel-sidebar-expanded .navtitle,body.simatel-sidebar-expanded .nav span:not(.ico),body.simatel-sidebar-expanded .sidebottom{display:block!important}
- body.simatel-sidebar-expanded .nav{justify-content:flex-start!important;padding:9px 10px!important}
- .topbar{gap:10px;flex-wrap:wrap}
-}
-
 </style>
 <style>/* Official crest identity */
 .crest{background:transparent!important;box-shadow:none!important;border:0!important;border-radius:0!important;width:46px;height:52px;flex:0 0 46px;padding:0!important}
@@ -138,44 +120,9 @@ body.simatel-sidebar-expanded .sidebar{padding-left:16px!important;padding-right
 .login-brand-mark{width:94px;height:104px;background:transparent;border:0;box-shadow:none;border-radius:0}
 .login-mobile-mark{width:58px;height:66px;background:transparent;border:0;border-radius:0}
 </style>
-<style>
-/* SIMATEL: penyesuaian tata letak smartphone saja; tanpa perubahan JavaScript/data */
-@media (max-width: 620px) {
-  html, body { width:100%; max-width:100%; overflow-x:hidden; }
-  .app { display:block !important; width:100%; min-width:0; }
-  main { width:100%; min-width:0; max-width:100%; box-sizing:border-box; padding:14px 12px 24px !important; }
-  .topbar { display:flex; flex-direction:column; align-items:stretch !important; gap:10px; width:100%; min-width:0; margin-bottom:18px; }
-  .topbar > div:first-child { display:block; width:100%; min-width:0; max-width:100%; overflow-wrap:break-word; }
-  .topbar .crumb:first-child { font-size:12px !important; line-height:1.45; letter-spacing:1px; overflow-wrap:anywhere; }
-  .topbar h1 { font-size:clamp(22px, 6vw, 28px) !important; line-height:1.2; margin:8px 0 !important; overflow-wrap:normal; word-break:normal; }
-  .topbar .crumb, .topbar > div:first-child > div:last-child { font-size:13px; line-height:1.5; overflow-wrap:break-word; }
-  .topright { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; width:100%; min-width:0; gap:8px; }
-  .gridstats { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:10px !important; }
-  .stat, .card, .panel, .dash-welcome { min-width:0; max-width:100%; box-sizing:border-box; }
-  .stat { padding:14px 12px !important; overflow-wrap:break-word; }
-  .statnum { font-size:clamp(22px, 6vw, 28px) !important; }
-  .dash-welcome { display:flex; flex-direction:column; gap:12px; }
-  .dash-welcome h2 { font-size:clamp(20px, 5.5vw, 25px); line-height:1.25; }
-  .dash-welcome p { line-height:1.5; overflow-wrap:break-word; }
-  .cardhead { gap:8px; align-items:flex-start; flex-wrap:wrap; }
-  .tablewrap, .table-responsive, .inventory-table-wrap { width:100%; max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-  table { max-width:100%; }
-  .detailgrid, .docgrid, .formgrid { grid-template-columns:minmax(0,1fr) !important; }
-  .field, .field input, .field select, .field textarea, input, select, textarea { min-width:0; max-width:100%; box-sizing:border-box; }
-  .field.full { grid-column:auto !important; }
-  .detailhead, .deviceintro { flex-direction:column; align-items:stretch; }
-  .devicepic { width:100%; max-width:100%; min-height:130px; }
-  .modal, .modal-card, .dialog, .modal-content { width:calc(100vw - 24px) !important; max-width:calc(100vw - 24px) !important; max-height:calc(100dvh - 24px); overflow:auto; box-sizing:border-box; }
-  button, .btn { max-width:100%; }
-  img, canvas, video, iframe { max-width:100%; }
-}
-@media (max-width: 380px) {
-  main { padding-left:10px !important; padding-right:10px !important; }
-  .gridstats { grid-template-columns:minmax(0,1fr) !important; }
-  .topbar h1 { font-size:22px !important; }
-}
 
-</style>
+<link rel="stylesheet" href="./desktop.css" media="(min-width: 761px)">
+<link rel="stylesheet" href="./mobile.css" media="(max-width: 760px)">
 </head>
 <body data-theme="light">
 <section id="publicDevicePage" class="public-page"><div class="public-card"><div class="public-top"><small>KEJAKSAAN TINGGI KALIMANTAN TENGAH</small><h1 style="margin:8px 0 0;font-size:24px">SIMATEL</h1><div style="margin-top:5px">Informasi publik perangkat</div></div><div class="public-body"><div id="publicDeviceState" class="tiny">Memuat informasi perangkat...</div><div id="publicDeviceFields"></div><p class="public-note">Halaman ini hanya menampilkan kode inventaris, nama perangkat, dan kategori yang telah disetujui untuk publikasi. Informasi internal dan dokumen tidak ditampilkan.</p></div></div></section>
@@ -319,7 +266,6 @@ body.simatel-sidebar-expanded .sidebar{padding-left:16px!important;padding-right
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <script>
 /*
  SIMATEL Supabase integration.
@@ -406,15 +352,10 @@ function ensureHeaderControls(){
   const right=document.querySelector(".topright");
   if(!right || $("simatelUserControls"))return;
   const controls=document.createElement("div");controls.id="simatelUserControls";controls.style.cssText="display:flex;gap:8px;align-items:center";
-  controls.innerHTML='<button class="btn small" id="simatelHomeButton" type="button" title="Kembali ke menu utama">⌂ Menu utama</button><button class="btn small" id="simatelSidebarToggle" type="button" title="Perbesar/perkecil menu samping" aria-label="Perbesar/perkecil menu samping">☰</button><button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut" type="button">↪ Keluar</button>'; 
+  controls.innerHTML='<button class="btn small" id="simatelThemeToggle" type="button" title="Ganti tema" aria-label="Ganti tema">☾</button><span id="simatelUserEmail" class="tiny"></span><button class="btn small" id="simatelSignOut" type="button">↪ Keluar</button>'; 
   const savedTheme=(()=>{try{return localStorage.getItem("simatel-theme")||"light"}catch(e){return "light"}})();
   right.prepend(controls);
   applySimatelTheme(savedTheme);
-  const homeButton=$("simatelHomeButton");
-  if(homeButton)homeButton.onclick=()=>showDashboard();
-  const sidebarToggle=$("simatelSidebarToggle");
-  if(sidebarToggle)sidebarToggle.onclick=()=>{document.body.classList.toggle("simatel-sidebar-expanded");try{localStorage.setItem("simatel-sidebar-expanded",document.body.classList.contains("simatel-sidebar-expanded")?"1":"0")}catch(e){}};
-  try{if(localStorage.getItem("simatel-sidebar-expanded")==="1")document.body.classList.add("simatel-sidebar-expanded")}catch(e){}
   const themeButton=$("simatelThemeToggle");
   if(themeButton) themeButton.onclick=()=>applySimatelTheme(document.body.dataset.theme==="dark"?"light":"dark",true);
   const avatarButton=$("simatelAvatarAccount");
@@ -553,24 +494,19 @@ async function exportInventory(){
   const list=simatelExportAllAssets();
   try{
     const components=await simatelFetchAllComponents();
-    // Satu lembar hierarkis: setiap komponen langsung berada di bawah perangkat induknya.
-    const headers=["Jenis baris","Kode inventaris induk","Nama perangkat induk","Kategori","Merek / model induk","Nomor seri induk","Kondisi induk","Status induk","Lokasi","Penanggung jawab","Tanggal perolehan","Dokumen induk","Kode inventaris komponen","Nama komponen","Merek komponen","Model komponen","Nomor seri komponen","Jumlah komponen","Kondisi komponen","Catatan kondisi komponen","Dokumentasi komponen","Tanggal dicatat"];
-    const rows=[];
-    list.forEach(a=>{
-      rows.push({"Jenis baris":"PERANGKAT UTAMA","Kode inventaris induk":a.code,"Nama perangkat induk":a.name,"Kategori":a.category,"Merek / model induk":a.model,"Nomor seri induk":a.serial,"Kondisi induk":a.condition,"Status induk":a.status,"Lokasi":a.location,"Penanggung jawab":a.owner,"Tanggal perolehan":a.date,"Dokumen induk":(a.docs||[]).length});
-      components.filter(c=>String(c.device_id)===String(a.id)).forEach(c=>rows.push({"Jenis baris":"  ↳ KOMPONEN","Kode inventaris induk":a.code,"Nama perangkat induk":"  ↳ "+a.name,"Kode inventaris komponen":c.component_code,"Nama komponen":"    ↳ "+c.component_name,"Merek komponen":c.brand,"Model komponen":c.model,"Nomor seri komponen":c.serial_number,"Jumlah komponen":c.quantity,"Kondisi komponen":c.condition,"Catatan kondisi komponen":c.notes,"Dokumentasi komponen":c.documentCount,"Tanggal dicatat":c.created_at}));
-    });
-    // Komponen dengan perangkat induk yang tidak ditemukan tetap tercatat di bagian akhir.
-    components.filter(c=>!list.some(a=>String(a.id)===String(c.device_id))).forEach(c=>rows.push({"Jenis baris":"KOMPONEN — INDUK TIDAK DITEMUKAN","Kode inventaris induk":c.device_id,"Nama perangkat induk":"Perangkat tidak ditemukan","Kode inventaris komponen":c.component_code,"Nama komponen":"  ↳ "+c.component_name,"Merek komponen":c.brand,"Model komponen":c.model,"Nomor seri komponen":c.serial_number,"Jumlah komponen":c.quantity,"Kondisi komponen":c.condition,"Catatan kondisi komponen":c.notes,"Dokumentasi komponen":c.documentCount,"Tanggal dicatat":c.created_at}));
+    const rows=list.map(a=>({"Kode inventaris":a.code,"Nama perangkat":a.name,"Kategori":a.category,"Merek / model":a.model,"Nomor seri":a.serial,"Kondisi":a.condition,"Status":a.status,"Lokasi":a.location,"Penanggung jawab":a.owner,"Tanggal perolehan":a.date,"Jumlah dokumen perangkat":(a.docs||[]).length}));
+    const compRows=components.map(c=>({"Kode perangkat induk":c.device?.code||c.device_id,"Nama perangkat induk":c.device?.name||"Perangkat tidak ditemukan","Kode inventaris komponen":c.component_code,"Nama komponen":c.component_name,"Merek":c.brand,"Model":c.model,"Nomor seri":c.serial_number,"Jumlah":c.quantity,"Kondisi":c.condition,"Catatan kondisi":c.notes,"Jumlah dokumentasi":c.documentCount,"Tanggal dicatat":c.created_at}));
     const summary=[{"Metrik":"Total perangkat induk","Jumlah":list.length},{"Metrik":"Total komponen","Jumlah":components.length},{"Metrik":"Komponen kondisi baik","Jumlah":components.filter(c=>c.condition==="Baik").length},{"Metrik":"Komponen rusak ringan","Jumlah":components.filter(c=>c.condition==="Rusak Ringan").length},{"Metrik":"Komponen rusak berat","Jumlah":components.filter(c=>c.condition==="Rusak Berat").length},{"Metrik":"Komponen tidak berfungsi","Jumlah":components.filter(c=>c.condition==="Tidak Berfungsi").length},{"Metrik":"Dokumen perangkat induk","Jumlah":list.reduce((n,a)=>n+(a.docs||[]).length,0)},{"Metrik":"Dokumen komponen","Jumlah":components.reduce((n,c)=>n+c.documentCount,0)}];
-    if(!window.XLSX){simatelCsvFallback(rows,"SIMATEL_Inventaris_dan_Komponen.csv");return;}
+    if(!window.XLSX){simatelCsvFallback(rows,"SIMATEL_Inventaris_Perangkat.csv");return;}
     const wb=XLSX.utils.book_new();
-    const ws=XLSX.utils.json_to_sheet(rows,{header});ws["!cols"]=[{wch:30},{wch:22},{wch:34},{wch:20},{wch:25},{wch:22},{wch:18},{wch:18},{wch:24},{wch:26},{wch:18},{wch:14},{wch:24},{wch:32},{wch:20},{wch:20},{wch:22},{wch:14},{wch:20},{wch:40},{wch:18},{wch:24}];
+    const ws=XLSX.utils.json_to_sheet(rows);ws["!cols"]=[{wch:20},{wch:32},{wch:24},{wch:28},{wch:22},{wch:20},{wch:22},{wch:26},{wch:28},{wch:18},{wch:22}];
+    const wc=XLSX.utils.json_to_sheet(compRows);wc["!cols"]=[{wch:20},{wch:32},{wch:22},{wch:30},{wch:22},{wch:22},{wch:22},{wch:10},{wch:20},{wch:40},{wch:18},{wch:24}];
     const ss=XLSX.utils.json_to_sheet(summary);ss["!cols"]=[{wch:32},{wch:16}];
-    XLSX.utils.book_append_sheet(wb,ws,"Inventaris + Komponen");
+    XLSX.utils.book_append_sheet(wb,ws,"Inventaris");
+    XLSX.utils.book_append_sheet(wb,wc,"Komponen");
     XLSX.utils.book_append_sheet(wb,ss,"Ringkasan");
     XLSX.writeFile(wb,"SIMATEL_Laporan_Inventaris_dan_Komponen.xlsx");
-    toast("Excel berhasil dibuat: komponen berada tepat di bawah perangkat induknya.");
+    toast("Excel berhasil dibuat: inventaris, komponen, dan ringkasan.");
   }catch(err){console.error("Ekspor Excel gagal:",err);toast(err.message||"Ekspor Excel gagal. Periksa Console.");}
 }
 async function exportPDF(){
@@ -581,11 +517,12 @@ async function exportPDF(){
       // Fallback tanpa pustaka eksternal: cetak tabel HTML ke PDF melalui dialog browser.
       const escHtml=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
       const table=(headers,rows)=>`<table><thead><tr>${headers.map(h=>`<th>${escHtml(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(v=>`<td>${escHtml(v)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
-      const invHeaders=["Jenis","Kode induk","Nama perangkat / komponen","Kategori","Merek/model","No. seri","Jumlah","Kondisi","Status","Lokasi","Penanggung jawab","Catatan","Dokumen"];
-      const invRows=[];list.forEach(a=>{invRows.push(["PERANGKAT UTAMA",a.code,a.name,a.category,a.model,a.serial,"—",a.condition,a.status,a.location,a.owner,"",(a.docs||[]).length]);components.filter(c=>String(c.device_id)===String(a.id)).forEach(c=>invRows.push(["  ↳ KOMPONEN",a.code,"    ↳ "+c.component_name,"",[c.brand,c.model].filter(Boolean).join(" "),c.serial_number,c.quantity,c.condition,"","","",c.notes,c.documentCount]));});
-      components.filter(c=>!list.some(a=>String(a.id)===String(c.device_id))).forEach(c=>invRows.push(["KOMPONEN — INDUK TIDAK DITEMUKAN",c.device_id,"  ↳ "+c.component_name,"",[c.brand,c.model].filter(Boolean).join(" "),c.serial_number,c.quantity,c.condition,"","","",c.notes,c.documentCount]));
+      const invHeaders=["Kode","Nama perangkat","Kategori","Merek/model","No. seri","Kondisi","Status","Lokasi","Penanggung jawab"];
+      const invRows=list.map(a=>[a.code,a.name,a.category,a.model,a.serial,a.condition,a.status,a.location,a.owner]);
+      const compHeaders=["Kode induk","Perangkat induk","Kode komponen","Nama komponen","Merek/model","No. seri","Jumlah","Kondisi","Catatan","Dokumen"];
+      const compRows=components.map(c=>[c.device?.code||c.device_id,c.device?.name,c.component_code,c.component_name,[c.brand,c.model].filter(Boolean).join(" "),c.serial_number,c.quantity,c.condition,c.notes,c.documentCount]);
       const w=window.open("","_blank");if(!w){toast("Izinkan pop-up untuk mencetak laporan PDF.");return;}
-      w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>SIMATEL - Laporan Inventaris</title><style>@page{size:A4 landscape;margin:12mm}body{font:10px Arial;color:#152238}h1{font-size:18px}p{font-size:10px}table{width:100%;border-collapse:collapse;margin-top:8px}th,td{border:1px solid #ccd4df;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e9eef4}tr{break-inside:avoid}.foot{margin-top:20px;color:#667085}@media print{button{display:none}}</style></head><body><h1>SIMATEL — Laporan Inventaris Perangkat</h1><p>Kejaksaan Tinggi Kalimantan Tengah · Dicetak ${escHtml(new Date().toLocaleString("id-ID"))}</p><p>Total perangkat induk: ${list.length} · Total komponen: ${components.length}</p>${table(invHeaders,invRows)}<p class="foot">Laporan internal SIMATEL</p><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close();return;
+      w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>SIMATEL - Laporan Inventaris</title><style>@page{size:A4 landscape;margin:12mm}body{font:10px Arial;color:#152238}h1{font-size:18px}h2{margin-top:24px;font-size:14px}p{font-size:10px}table{width:100%;border-collapse:collapse;margin-top:8px}th,td{border:1px solid #ccd4df;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e9eef4}tr{break-inside:avoid}.foot{margin-top:20px;color:#667085}@media print{button{display:none}}</style></head><body><h1>SIMATEL — Laporan Inventaris Perangkat</h1><p>Kejaksaan Tinggi Kalimantan Tengah · Dicetak ${escHtml(new Date().toLocaleString("id-ID"))}</p><p>Total perangkat induk: ${list.length} · Total komponen: ${components.length}</p><h2>Daftar Perangkat Induk</h2>${table(invHeaders,invRows)}<h2>Daftar Komponen dan Kondisi</h2>${table(compHeaders,compRows)}<p class="foot">Laporan internal SIMATEL</p><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close();return;
     }
     const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
     const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight(),stamp=new Date().toLocaleString("id-ID");
@@ -599,11 +536,14 @@ async function exportPDF(){
       rows.forEach((row,idx)=>{const wrapped=row.map((v,i)=>doc.splitTextToSize(String(v??"-").replace(/[\r\n]+/g," "),Math.max(5,ws[i]-2)));const rh=Math.max(7,...wrapped.map(a=>a.length*2.8+2));if(y+rh>pageH-12){doc.addPage();header(title+" (lanjutan)");y=35;thead();doc.setFont("helvetica","normal");doc.setFontSize(6.5);}if(idx%2){doc.setFillColor(249,250,252);doc.rect(left,y,tableW,rh,"F");}doc.setDrawColor(225,230,236);doc.line(left,y+rh,left+tableW,y+rh);let x=left;wrapped.forEach((lines,i)=>{doc.setTextColor(45,55,70);doc.text(lines,x+1,y+3);x+=ws[i];});y+=rh;});
       const pages=doc.internal.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(100,110,122);doc.text("SIMATEL · Laporan inventaris internal",14,pageH-5);doc.text("Halaman "+i+" dari "+pages,pageW-14,pageH-5,{align:"right"});}
     }
-    const invHeaders=["Jenis","Kode induk","Nama perangkat / komponen","Kategori","Merek/model","No. seri","Jumlah","Kondisi","Status","Lokasi","Penanggung jawab","Catatan","Dokumen"];
-    const invRows=[];list.forEach(a=>{invRows.push(["PERANGKAT UTAMA",a.code,a.name,a.category,a.model,a.serial,"—",a.condition,a.status,a.location,a.owner,"",(a.docs||[]).length]);components.filter(c=>String(c.device_id)===String(a.id)).forEach(c=>invRows.push(["↳ KOMPONEN",a.code,"  ↳ "+c.component_name,"",[c.brand,c.model].filter(Boolean).join(" "),c.serial_number,c.quantity,c.condition,"","","",c.notes,c.documentCount]));});
-    components.filter(c=>!list.some(a=>String(a.id)===String(c.device_id))).forEach(c=>invRows.push(["KOMPONEN — INDUK TIDAK DITEMUKAN",c.device_id,"↳ "+c.component_name,"",[c.brand,c.model].filter(Boolean).join(" "),c.serial_number,c.quantity,c.condition,"","","",c.notes,c.documentCount]));
-    drawTable("DAFTAR INVENTARIS DENGAN KOMPONEN DI BAWAH PERANGKAT INDUK",invHeaders,invRows,[23,18,32,15,20,17,9,15,14,18,22,25,10]);
-    doc.save("SIMATEL_Laporan_Inventaris_dan_Komponen.pdf");toast("PDF landscape berhasil dibuat dengan komponen sebagai subbaris perangkat induk.");
+    const invHeaders=["Kode","Nama perangkat","Kategori","Merek/model","No. seri","Kondisi","Status","Lokasi","Penanggung jawab"];
+    const invRows=list.map(a=>[a.code,a.name,a.category,a.model,a.serial,a.condition,a.status,a.location,a.owner]);
+    drawTable("DAFTAR PERANGKAT INDUK",invHeaders,invRows,[18,30,20,24,19,17,17,23,25]);
+    doc.addPage();
+    const compHeaders=["Kode induk","Perangkat induk","Kode komponen","Nama komponen","Merek/model","No. seri","Jumlah","Kondisi","Catatan","Dokumen"];
+    const compRows=components.map(c=>[c.device?.code||c.device_id,c.device?.name,c.component_code,c.component_name,[c.brand,c.model].filter(Boolean).join(" "),c.serial_number,c.quantity,c.condition,c.notes,c.documentCount]);
+    drawTable("DAFTAR KOMPONEN DAN KONDISI",compHeaders,compRows,[18,25,20,25,20,17,10,17,30,12]);
+    doc.save("SIMATEL_Laporan_Inventaris_dan_Komponen.pdf");toast("PDF landscape berhasil dibuat, termasuk daftar komponen dan kondisi.");
   }catch(err){console.error("Ekspor PDF gagal:",err);toast(err.message||"Ekspor PDF gagal. Periksa Console.");}
 }
 let activeQRDevice=null;
@@ -686,31 +626,27 @@ async function startInspectionScanner(){
   if(status)status.textContent="Kamera membutuhkan HTTPS atau localhost. Untuk sementara, masukkan kode inventaris secara manual.";
   if(wrap)wrap.classList.remove("hidden");return;
  }
+ if(!("BarcodeDetector" in window)){
+  if(status)status.textContent="Pemindai QR bawaan tidak didukung browser ini. Masukkan kode inventaris secara manual atau gunakan Chrome terbaru.";
+  if(wrap)wrap.classList.remove("hidden");return;
+ }
  try{
   stopInspectionScanner();if(wrap)wrap.classList.remove("hidden");
   if(status)status.textContent="Meminta izin kamera…";
-  inspectionStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}},audio:false});
+  inspectionStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false});
   if(!video)throw new Error("Elemen kamera tidak ditemukan.");
-  video.setAttribute("playsinline","");video.muted=true;video.srcObject=inspectionStream;await video.play();
-  const nativeDetector=("BarcodeDetector" in window)?new BarcodeDetector({formats:["qr_code"]}):null;
-  const canvas=document.createElement("canvas"),ctx=canvas.getContext("2d",{willReadFrequently:true});
-  if(!nativeDetector && typeof window.jsQR!=="function")throw new Error("Pustaka pemindai QR belum termuat. Periksa koneksi internet lalu muat ulang halaman.");
-  inspectionLoopActive=true;
-  if(status)status.textContent="Arahkan QR ke dalam kamera, dekatkan perlahan, dan pastikan QR terlihat jelas.";
+  video.srcObject=inspectionStream;await video.play();
+  const detector=new BarcodeDetector({formats:["qr_code"]});inspectionLoopActive=true;
+  if(status)status.textContent="Arahkan kamera ke QR perangkat. Pemindaian berhenti setelah QR terbaca.";
   const tick=async()=>{
    if(!inspectionLoopActive||!inspectionStream)return;
    try{
-    if(video.readyState>=2 && video.videoWidth>0 && video.videoHeight>0){
-     let raw="";
-     if(nativeDetector){const codes=await nativeDetector.detect(video);if(codes?.length)raw=codes[0].rawValue||"";}
-     else{
-      canvas.width=video.videoWidth;canvas.height=video.videoHeight;
-      ctx.drawImage(video,0,0,canvas.width,canvas.height);
-      const frame=ctx.getImageData(0,0,canvas.width,canvas.height);
-      const code=window.jsQR(frame.data,frame.width,frame.height,{inversionAttempts:"attemptBoth"});
-      if(code)raw=code.data||"";
+    if(video.readyState>=2){
+     const codes=await detector.detect(video);
+     if(codes?.length){
+      const input=$("inspectionCode");if(input)input.value=codes[0].rawValue||"";
+      stopInspectionScanner();findInspectionAsset();return;
      }
-     if(raw){const input=$("inspectionCode");if(input)input.value=raw;stopInspectionScanner();findInspectionAsset();return;}
     }
    }catch(e){console.warn("Pemindaian QR gagal pada frame ini:",e)}
    if(inspectionLoopActive)requestAnimationFrame(tick);
