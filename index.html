@@ -521,62 +521,71 @@ function simatelCsvFallback(rows,filename){
   const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
   toast("Pustaka Excel tidak tersedia; data diekspor sebagai CSV yang dapat dibuka di Excel.");
 }
+function simatelBuildHierarchy(list, components){
+  const out=[];
+  for(const a of list){
+    out.push({"Jenis":"PERANGKAT INDUK","Kode inventaris":a.code,"Nama perangkat / komponen":a.name,"Kategori / merek":a.category,"Merek / model":a.model,"Nomor seri":a.serial,"Jumlah":1,"Kondisi":a.condition,"Status":a.status,"Lokasi":a.location,"Penanggung jawab":a.owner,"Catatan":`Dokumen perangkat: ${(a.docs||[]).length}`});
+    const children=components.filter(c=>String(c.device_id)===String(a.id));
+    for(const c of children){
+      out.push({"Jenis":"  ↳ SUBKOMPONEN","Kode inventaris":c.component_code,"Nama perangkat / komponen":"    └─ "+(c.component_name||"Komponen tanpa nama"),"Kategori / merek":[c.brand,c.model].filter(Boolean).join(" / "),"Merek / model":c.model,"Nomor seri":c.serial_number,"Jumlah":c.quantity,"Kondisi":c.condition,"Status":"Komponen","Lokasi":"↳ milik "+(a.code||a.name),"Penanggung jawab":"","Catatan":[c.notes||"",`Dokumen komponen: ${c.documentCount||0}`].filter(Boolean).join(" | ")});
+    }
+  }
+  // Komponen yatim tetap dimasukkan agar tidak hilang dari laporan.
+  for(const c of components.filter(c=>!list.some(a=>String(a.id)===String(c.device_id)))) out.push({"Jenis":"SUBKOMPONEN — INDUK TIDAK DITEMUKAN","Kode inventaris":c.component_code,"Nama perangkat / komponen":"    └─ "+(c.component_name||"Komponen tanpa nama"),"Kategori / merek":[c.brand,c.model].filter(Boolean).join(" / "),"Merek / model":c.model,"Nomor seri":c.serial_number,"Jumlah":c.quantity,"Kondisi":c.condition,"Status":"Perlu verifikasi induk","Lokasi":"","Penanggung jawab":"","Catatan":c.notes||""});
+  return out;
+}
 async function exportInventory(){
   const list=simatelExportAllAssets();
   try{
     const components=await simatelFetchAllComponents();
+    const hierarchy=simatelBuildHierarchy(list,components);
     const rows=list.map(a=>({"Kode inventaris":a.code,"Nama perangkat":a.name,"Kategori":a.category,"Merek / model":a.model,"Nomor seri":a.serial,"Kondisi":a.condition,"Status":a.status,"Lokasi":a.location,"Penanggung jawab":a.owner,"Tanggal perolehan":a.date,"Jumlah dokumen perangkat":(a.docs||[]).length}));
     const compRows=components.map(c=>({"Kode perangkat induk":c.device?.code||c.device_id,"Nama perangkat induk":c.device?.name||"Perangkat tidak ditemukan","Kode inventaris komponen":c.component_code,"Nama komponen":c.component_name,"Merek":c.brand,"Model":c.model,"Nomor seri":c.serial_number,"Jumlah":c.quantity,"Kondisi":c.condition,"Catatan kondisi":c.notes,"Jumlah dokumentasi":c.documentCount,"Tanggal dicatat":c.created_at}));
     const summary=[{"Metrik":"Total perangkat induk","Jumlah":list.length},{"Metrik":"Total komponen","Jumlah":components.length},{"Metrik":"Komponen kondisi baik","Jumlah":components.filter(c=>c.condition==="Baik").length},{"Metrik":"Komponen rusak ringan","Jumlah":components.filter(c=>c.condition==="Rusak Ringan").length},{"Metrik":"Komponen rusak berat","Jumlah":components.filter(c=>c.condition==="Rusak Berat").length},{"Metrik":"Komponen tidak berfungsi","Jumlah":components.filter(c=>c.condition==="Tidak Berfungsi").length},{"Metrik":"Dokumen perangkat induk","Jumlah":list.reduce((n,a)=>n+(a.docs||[]).length,0)},{"Metrik":"Dokumen komponen","Jumlah":components.reduce((n,c)=>n+c.documentCount,0)}];
-    if(!window.XLSX){simatelCsvFallback(rows,"SIMATEL_Inventaris_Perangkat.csv");return;}
+    if(!window.XLSX){simatelCsvFallback(hierarchy,"SIMATEL_Inventaris_dan_Subkomponen.csv");return;}
     const wb=XLSX.utils.book_new();
+    const wh=XLSX.utils.json_to_sheet(hierarchy);wh["!cols"]=[{wch:29},{wch:22},{wch:34},{wch:24},{wch:22},{wch:22},{wch:10},{wch:20},{wch:23},{wch:28},{wch:25},{wch:42}];
+    // Tandai baris komponen sebagai subbaris dan perangkat induk sebagai baris utama.
+    wh["!autofilter"]={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:Math.max(0,hierarchy.length),c:11}})};
     const ws=XLSX.utils.json_to_sheet(rows);ws["!cols"]=[{wch:20},{wch:32},{wch:24},{wch:28},{wch:22},{wch:20},{wch:22},{wch:26},{wch:28},{wch:18},{wch:22}];
     const wc=XLSX.utils.json_to_sheet(compRows);wc["!cols"]=[{wch:20},{wch:32},{wch:22},{wch:30},{wch:22},{wch:22},{wch:22},{wch:10},{wch:20},{wch:40},{wch:18},{wch:24}];
     const ss=XLSX.utils.json_to_sheet(summary);ss["!cols"]=[{wch:32},{wch:16}];
-    XLSX.utils.book_append_sheet(wb,ws,"Inventaris");
-    XLSX.utils.book_append_sheet(wb,wc,"Komponen");
-    XLSX.utils.book_append_sheet(wb,ss,"Ringkasan");
-    XLSX.writeFile(wb,"SIMATEL_Laporan_Inventaris_dan_Komponen.xlsx");
-    toast("Excel berhasil dibuat: inventaris, komponen, dan ringkasan.");
+    XLSX.utils.book_append_sheet(wb,wh,"Hierarki Aset");XLSX.utils.book_append_sheet(wb,ws,"Inventaris");XLSX.utils.book_append_sheet(wb,wc,"Komponen");XLSX.utils.book_append_sheet(wb,ss,"Ringkasan");
+    XLSX.writeFile(wb,"SIMATEL_Laporan_Inventaris_dan_Subkomponen.xlsx");
+    toast("Excel berhasil dibuat. Komponen tampil tepat di bawah perangkat induknya pada sheet Hierarki Aset.");
   }catch(err){console.error("Ekspor Excel gagal:",err);toast(err.message||"Ekspor Excel gagal. Periksa Console.");}
 }
 async function exportPDF(){
   const list=simatelExportAllAssets();
   try{
     const components=await simatelFetchAllComponents();
+    const hierarchy=simatelBuildHierarchy(list,components);
+    const escHtml=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
     if(!window.jspdf||!window.jspdf.jsPDF){
-      // Fallback tanpa pustaka eksternal: cetak tabel HTML ke PDF melalui dialog browser.
-      const escHtml=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-      const table=(headers,rows)=>`<table><thead><tr>${headers.map(h=>`<th>${escHtml(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(v=>`<td>${escHtml(v)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
-      const invHeaders=["Kode","Nama perangkat","Kategori","Merek/model","No. seri","Kondisi","Status","Lokasi","Penanggung jawab"];
-      const invRows=list.map(a=>[a.code,a.name,a.category,a.model,a.serial,a.condition,a.status,a.location,a.owner]);
-      const compHeaders=["Kode induk","Perangkat induk","Kode komponen","Nama komponen","Merek/model","No. seri","Jumlah","Kondisi","Catatan","Dokumen"];
-      const compRows=components.map(c=>[c.device?.code||c.device_id,c.device?.name,c.component_code,c.component_name,[c.brand,c.model].filter(Boolean).join(" "),c.serial_number,c.quantity,c.condition,c.notes,c.documentCount]);
+      const headers=["Jenis","Kode inventaris","Nama perangkat / komponen","Kategori / merek","Nomor seri","Jumlah","Kondisi","Status","Lokasi","Catatan"];
+      const keys=["Jenis","Kode inventaris","Nama perangkat / komponen","Kategori / merek","Nomor seri","Jumlah","Kondisi","Status","Lokasi","Catatan"];
+      const table=`<table><thead><tr>${headers.map(h=>`<th>${escHtml(h)}</th>`).join("")}</tr></thead><tbody>${hierarchy.map((r,i)=>`<tr class="${r.Jenis.includes("SUBKOMPONEN")?"child":"parent"}">${keys.map(k=>`<td>${escHtml(r[k])}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
       const w=window.open("","_blank");if(!w){toast("Izinkan pop-up untuk mencetak laporan PDF.");return;}
-      w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>SIMATEL - Laporan Inventaris</title><style>@page{size:A4 landscape;margin:12mm}body{font:10px Arial;color:#152238}h1{font-size:18px}h2{margin-top:24px;font-size:14px}p{font-size:10px}table{width:100%;border-collapse:collapse;margin-top:8px}th,td{border:1px solid #ccd4df;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e9eef4}tr{break-inside:avoid}.foot{margin-top:20px;color:#667085}@media print{button{display:none}}</style></head><body><h1>SIMATEL — Laporan Inventaris Perangkat</h1><p>Kejaksaan Tinggi Kalimantan Tengah · Dicetak ${escHtml(new Date().toLocaleString("id-ID"))}</p><p>Total perangkat induk: ${list.length} · Total komponen: ${components.length}</p><h2>Daftar Perangkat Induk</h2>${table(invHeaders,invRows)}<h2>Daftar Komponen dan Kondisi</h2>${table(compHeaders,compRows)}<p class="foot">Laporan internal SIMATEL</p><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close();return;
+      w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>SIMATEL - Inventaris dan Subkomponen</title><style>@page{size:A4 landscape;margin:10mm}body{font:9px Arial;color:#152238}h1{font-size:17px}p{font-size:9px}table{width:100%;border-collapse:collapse;margin-top:8px}th,td{border:1px solid #ccd4df;padding:4px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e9eef4}.parent{font-weight:bold;background:#edf7f0}.child td:nth-child(3){padding-left:16px;color:#245d43}.foot{margin-top:16px;color:#667085}</style></head><body><h1>SIMATEL — Laporan Hierarki Inventaris</h1><p>Kejaksaan Tinggi Kalimantan Tengah · Dicetak ${escHtml(new Date().toLocaleString("id-ID"))}</p><p>Total perangkat induk: ${list.length} · Total komponen: ${components.length}</p>${table}<p class="foot">Laporan internal SIMATEL</p><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close();return;
     }
     const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
     const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight(),stamp=new Date().toLocaleString("id-ID");
-    function header(title){doc.setFillColor(18,34,57);doc.rect(0,0,pageW,22,"F");doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(14);doc.text("SIMATEL",14,9);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.text("KEJAKSAAN TINGGI KALIMANTAN TENGAH",14,15);doc.setFont("helvetica","bold");doc.text(title,pageW-14,12,{align:"right"});doc.setTextColor(70,80,95);doc.setFontSize(8);doc.text("Dicetak: "+stamp,14,28);}
-    function drawTable(title,headers,rows,widths){
-      let y=35;doc.setTextColor(18,34,57);doc.setFont("helvetica","bold");doc.setFontSize(10);doc.text(title,14,y);y+=5;
-      const left=14,tableW=pageW-28,rawTotal=widths.reduce((a,b)=>a+b,0),ws=widths.map(w=>w*tableW/rawTotal),rhHead=8;
-      function thead(){doc.setFillColor(232,237,243);doc.rect(left,y,tableW,rhHead,"F");doc.setFont("helvetica","bold");doc.setFontSize(7);doc.setTextColor(35,47,62);let x=left;headers.forEach((h,i)=>{doc.text(doc.splitTextToSize(String(h),ws[i]-2).slice(0,2),x+1,y+3,{lineHeightFactor:1});x+=ws[i];});y+=rhHead;}
-      thead();doc.setFont("helvetica","normal");doc.setFontSize(6.5);
-      if(!rows.length){doc.text("Tidak ada data.",left+2,y+5);y+=8;}
-      rows.forEach((row,idx)=>{const wrapped=row.map((v,i)=>doc.splitTextToSize(String(v??"-").replace(/[\r\n]+/g," "),Math.max(5,ws[i]-2)));const rh=Math.max(7,...wrapped.map(a=>a.length*2.8+2));if(y+rh>pageH-12){doc.addPage();header(title+" (lanjutan)");y=35;thead();doc.setFont("helvetica","normal");doc.setFontSize(6.5);}if(idx%2){doc.setFillColor(249,250,252);doc.rect(left,y,tableW,rh,"F");}doc.setDrawColor(225,230,236);doc.line(left,y+rh,left+tableW,y+rh);let x=left;wrapped.forEach((lines,i)=>{doc.setTextColor(45,55,70);doc.text(lines,x+1,y+3);x+=ws[i];});y+=rh;});
-      const pages=doc.internal.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(100,110,122);doc.text("SIMATEL · Laporan inventaris internal",14,pageH-5);doc.text("Halaman "+i+" dari "+pages,pageW-14,pageH-5,{align:"right"});}
-    }
-    const invHeaders=["Kode","Nama perangkat","Kategori","Merek/model","No. seri","Kondisi","Status","Lokasi","Penanggung jawab"];
-    const invRows=list.map(a=>[a.code,a.name,a.category,a.model,a.serial,a.condition,a.status,a.location,a.owner]);
-    drawTable("DAFTAR PERANGKAT INDUK",invHeaders,invRows,[18,30,20,24,19,17,17,23,25]);
-    doc.addPage();
-    const compHeaders=["Kode induk","Perangkat induk","Kode komponen","Nama komponen","Merek/model","No. seri","Jumlah","Kondisi","Catatan","Dokumen"];
-    const compRows=components.map(c=>[c.device?.code||c.device_id,c.device?.name,c.component_code,c.component_name,[c.brand,c.model].filter(Boolean).join(" "),c.serial_number,c.quantity,c.condition,c.notes,c.documentCount]);
-    drawTable("DAFTAR KOMPONEN DAN KONDISI",compHeaders,compRows,[18,25,20,25,20,17,10,17,30,12]);
-    doc.save("SIMATEL_Laporan_Inventaris_dan_Komponen.pdf");toast("PDF landscape berhasil dibuat, termasuk daftar komponen dan kondisi.");
+    function header(){doc.setFillColor(18,34,57);doc.rect(0,0,pageW,22,"F");doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(14);doc.text("SIMATEL",14,9);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.text("KEJAKSAAN TINGGI KALIMANTAN TENGAH",14,15);doc.setFont("helvetica","bold");doc.text("HIERARKI INVENTARIS DAN SUBKOMPONEN",pageW-14,12,{align:"right"});doc.setTextColor(70,80,95);doc.setFontSize(8);doc.text("Dicetak: "+stamp,14,28);}
+    header();let y=36;const left=12,tableW=pageW-24,headers=["Jenis","Kode","Nama perangkat / komponen","Kategori / merek","No. seri","Jml.","Kondisi","Status","Lokasi","Catatan"],widths=[27,19,39,24,19,9,17,19,23,tableW-196],sum=widths.reduce((a,b)=>a+b,0),ws=widths.map(w=>w*tableW/sum),headH=9;
+    function drawHead(){doc.setFillColor(232,237,243);doc.rect(left,y,tableW,headH,"F");doc.setFont("helvetica","bold");doc.setFontSize(6.5);doc.setTextColor(35,47,62);let x=left;headers.forEach((h,i)=>{doc.text(doc.splitTextToSize(h,ws[i]-2).slice(0,2),x+1,y+3);x+=ws[i];});y+=headH;}
+    drawHead();doc.setFontSize(6.2);
+    hierarchy.forEach((r,idx)=>{
+      const vals=[r.Jenis,r["Kode inventaris"],r["Nama perangkat / komponen"],r["Kategori / merek"],r["Nomor seri"],r["Jumlah"],r["Kondisi"],r["Status"],r["Lokasi"],r["Catatan"]];
+      const child=r.Jenis.includes("SUBKOMPONEN");const wrapped=vals.map((v,i)=>doc.splitTextToSize(String(v??"-").replace(/[\r\n]+/g," "),Math.max(5,ws[i]-2)));const rh=Math.max(7,...wrapped.map(a=>a.length*2.6+2));
+      if(y+rh>pageH-12){doc.addPage();header();y=36;drawHead();doc.setFont("helvetica","normal");doc.setFontSize(6.2);}
+      if(!child){doc.setFillColor(237,247,240);doc.rect(left,y,tableW,rh,"F");doc.setFont("helvetica","bold");}else{doc.setFillColor(idx%2?255:249,idx%2?255:250,idx%2?255:252);doc.rect(left,y,tableW,rh,"F");doc.setFont("helvetica","normal");}
+      doc.setDrawColor(225,230,236);doc.line(left,y+rh,left+tableW,y+rh);let x=left;wrapped.forEach((lines,i)=>{doc.setTextColor(45,55,70);if(child&&i===2)doc.setTextColor(36,93,67);doc.text(lines,x+1+(child&&i===2?2:0),y+3);x+=ws[i];});y+=rh;
+    });
+    const pages=doc.internal.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(100,110,122);doc.text("SIMATEL · Laporan inventaris internal",12,pageH-5);doc.text("Halaman "+i+" dari "+pages,pageW-12,pageH-5,{align:"right"});}
+    doc.save("SIMATEL_Laporan_Inventaris_dan_Subkomponen.pdf");toast("PDF berhasil dibuat dengan komponen sebagai subbaris perangkat induk.");
   }catch(err){console.error("Ekspor PDF gagal:",err);toast(err.message||"Ekspor PDF gagal. Periksa Console.");}
 }
+
 let activeQRDevice=null;
 function deviceQRUrl(device){
   // UUID database menjadi identitas stabil; setelah dipindai, aplikasi akan meminta login seperti biasa.
