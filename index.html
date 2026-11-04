@@ -163,6 +163,41 @@ body[data-theme="dark"] .dash-card,body[data-theme="dark"] .dash-stat{background
  .simatel-account-actions .simatel-mobile-btn{padding:8px 7px;font-size:14px}
 .gridstats{grid-template-columns:minmax(0,1fr)!important}.simatel-mobile-btn{padding:8px 10px;font-size:13px}}
 </style>
+<style id="simatel-modern-intelligence-build">
+:root{--bg:#f3f7f4;--white:#fff;--text:#18372b;--muted:#6d8175;--line:#dce8e0;--green:#159b63;--greenbg:#e7f5ed;--simatel-shadow:0 8px 28px rgba(12,70,43,.08)}
+body{background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif}.app{grid-template-columns:236px minmax(0,1fr);min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;padding:22px 14px;background:linear-gradient(180deg,#16a66a 0%,#087a4b 48%,#07583d 100%);box-shadow:5px 0 24px rgba(8,85,54,.08)}
+.brand{padding:5px 8px 22px;border-bottom:1px solid #ffffff35}.brand b{font-size:15px;color:#fff}.brand small{color:#d7f1e3}
+.navtitle{color:#d1eddd;margin:24px 10px 9px}.nav{color:#e9f8ef;border-radius:10px;padding:12px 13px;margin:4px 0;transition:background .18s,transform .18s}
+.nav:hover{background:#ffffff1d;transform:translateX(2px)}.nav.active{background:#fff;color:#087a4b;box-shadow:0 5px 14px #064c3430;border:0}.nav.active .ico{color:#087a4b}.sidebottom{border-color:#ffffff35;color:#d1eddd}
+main{padding:26px clamp(18px,2.5vw,38px);min-width:0}.topbar{background:linear-gradient(105deg,#e4f5eb 0%,#fff 70%);border:1px solid #dcebe1;border-radius:16px;padding:20px 23px;box-shadow:var(--simatel-shadow);margin-bottom:22px}
+.topbar h1{color:#123d2b;font-size:27px;font-weight:800}.topbar .crumb{color:#628071!important}.topright .avatar{background:#e2f3e9;color:#087a4b;border:2px solid #c8e7d4;width:42px;height:42px}
+.gridstats{gap:15px}.stat,.card{border:1px solid #dce9e0;border-radius:14px;box-shadow:var(--simatel-shadow);background:#fff}.stat{padding:18px;transition:transform .18s,box-shadow .18s}.stat:hover{transform:translateY(-2px);box-shadow:0 13px 32px rgba(12,70,43,.12)}
+.card{overflow:hidden}.cardhead{background:linear-gradient(100deg,#e9f7ef,#d9f0e3);padding:18px 21px;border-bottom:1px solid #d5e8dc}.cardhead h2{color:#123d2b}
+.filters{background:#fff;padding:15px 18px;gap:10px}.filters input,.filters select,.field input,.field select{border:1px solid #d7e5dc;border-radius:9px;min-height:42px}
+.filters input:focus,.filters select:focus,.field input:focus,.field select:focus{outline:0;border-color:#159b63;box-shadow:0 0 0 3px #159b631a}
+.btn{border-radius:9px}.btn.primary{background:linear-gradient(110deg,#16a66a,#087a4b);border-color:#087a4b;color:#fff}.btn.primary:hover{background:#076b43}
+th{background:linear-gradient(100deg,#22ae72,#0c8d58);color:#fff;font-size:11px;padding:13px 14px}td{padding:13px 14px;border-color:#e8efe9}
+tbody tr:nth-child(even){background:#f7faf8}tbody tr:hover{background:#eaf7ef}.asset-cell{gap:11px}.asset-thumb,.asset-placeholder{width:54px;height:54px;border-radius:8px;border:1px solid #dce9e0}.pill{border-radius:6px}
+.modal{border:1px solid #dce9e0;border-radius:16px;box-shadow:0 24px 70px #123d2b2a}.toast{background:#123d2b;border-radius:10px}
+#simatelSignOut{display:none!important}#accountModal .modalfoot #simatelAccountLogout{margin-right:auto;background:#fff1f0;color:#b42318;border:1px solid #ffd2cf}.simatel-bottom-nav{display:none}
+body[data-theme="dark"]{--bg:#0c1711;--white:#14251b;--text:#e5f1e8;--muted:#a4b8aa;--line:#2b4737;background:#0c1711;color:#e5f1e8}
+body[data-theme="dark"] .app,body[data-theme="dark"] main{background:#0c1711;color:#e5f1e8}body[data-theme="dark"] .topbar{background:linear-gradient(105deg,#123e2a,#173c2b 70%);border-color:#2b4737}
+body[data-theme="dark"] .topbar h1,body[data-theme="dark"] .topbar .crumb{color:#f0f7f2!important}
+body[data-theme="dark"] .stat,body[data-theme="dark"] .card,body[data-theme="dark"] .filters,body[data-theme="dark"] .tablewrap{background:#14251b;border-color:#2b4737;color:#e5f1e8}
+body[data-theme="dark"] .cardhead{background:linear-gradient(100deg,#173c2b,#1c4b35);border-color:#2b4737}body[data-theme="dark"] .cardhead h2,body[data-theme="dark"] .cardhead p{color:#e5f1e8}
+body[data-theme="dark"] th{background:#087a4b;color:#fff}body[data-theme="dark"] td{border-color:#2b4737}body[data-theme="dark"] tbody tr:nth-child(even){background:#172c20}
+body[data-theme="dark"] .filters input,body[data-theme="dark"] .filters select,body[data-theme="dark"] .field input,body[data-theme="dark"] .field select{background:#0c1711;color:#e5f1e8;border-color:#365a45}
+@media(max-width:900px){.app{grid-template-columns:78px minmax(0,1fr)}.sidebar{padding:18px 8px}.brand{justify-content:center;padding:4px 0 18px}.brandtext,.navtitle,.nav span:not(.ico),.sidebottom{display:none}.nav{justify-content:center;padding:13px 5px}.nav .ico{font-size:18px}.gridstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.app{display:block;min-height:100vh;padding-bottom:calc(72px + env(safe-area-inset-bottom))}.sidebar{display:none!important}main{padding:10px 12px 20px;width:100%;min-width:0}
+.topbar{position:relative;top:auto;margin:0 0 14px;padding:15px;border-radius:13px}.topbar h1{font-size:22px}.topbar .crumb{font-size:10px}
+.gridstats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:13px;min-width:0}.statnum{font-size:23px}.cardhead{padding:15px;flex-wrap:wrap}
+.filters{padding:12px;display:grid;grid-template-columns:1fr 1fr}.filters input{grid-column:1/-1;min-width:0;width:100%}.filters select{min-width:0;width:100%}.tablewrap{max-width:100%;overflow-x:auto}
+.simatel-bottom-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:999;padding:7px 5px calc(7px + env(safe-area-inset-bottom));background:#087a4b;border-top:1px solid #ffffff35;box-shadow:0 -8px 24px #063d2b22}
+.simatel-bottom-nav button{color:#d8f0e2;min-height:48px}.simatel-bottom-nav button.active,.simatel-bottom-nav button:focus{color:#fff;background:#ffffff20;border-radius:9px}.simatel-bottom-nav button small{font-size:9px}
+.detailgrid{grid-template-columns:1fr}.detailhead{flex-wrap:wrap}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+@media(max-width:390px){main{padding-left:9px;padding-right:9px}.topbar{padding:12px}.topbar h1{font-size:20px}.simatel-bottom-nav button small{font-size:8px}.simatel-bottom-nav button span{font-size:17px}}
+</style>
 </head>
 <body data-theme="light">
 <section id="publicDevicePage" class="public-page"><div class="public-card"><div class="public-top"><small>KEJAKSAAN TINGGI KALIMANTAN TENGAH</small><h1 style="margin:8px 0 0;font-size:24px">SIMATEL</h1><div style="margin-top:5px">Informasi publik perangkat</div></div><div class="public-body"><div id="publicDeviceState" class="tiny">Memuat informasi perangkat...</div><div id="publicDeviceFields"></div><p class="public-note">Halaman ini hanya menampilkan kode inventaris, nama perangkat, dan kategori yang telah disetujui untuk publikasi. Informasi internal dan dokumen tidak ditampilkan.</p></div></div></section>
@@ -416,6 +451,12 @@ function ensureHeaderControls(){
   if(avatarButton){avatarButton.style.cursor="pointer";avatarButton.onclick=openAccountSettings;avatarButton.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openAccountSettings()}}}
   const signOutButton=$("simatelSignOut");
   if(signOutButton) signOutButton.onclick=async()=>{await db.auth.signOut();location.reload()};
+  const accountFoot=document.querySelector("#accountModal .modalfoot");
+  if(accountFoot&&!$("simatelAccountLogout")){
+    const accountLogout=document.createElement("button");accountLogout.type="button";accountLogout.id="simatelAccountLogout";accountLogout.className="btn small";accountLogout.textContent="↪ Keluar";
+    accountLogout.onclick=async()=>{if(!db)return;const result=await db.auth.signOut();if(result.error){toast("Gagal keluar. Silakan coba kembali.");console.error(result.error);return}location.reload()};
+    accountFoot.prepend(accountLogout);
+  }
 }
 async function getCategories(){
   const {data,error}=await db.from("device_categories").select("id,name").order("name");
@@ -784,7 +825,10 @@ if($("inspectionForm"))$("inspectionForm").onsubmit=async e=>{
 function resetFilters(){
   $("q").value="";$("cat").value="";$("cond").value="";$("statusFilter").value="";render();
 }
-function setActivePage(page){document.querySelectorAll(".sidebar .nav").forEach(n=>n.classList.toggle("active",n.dataset.page===page||(page==="reports"&&n.textContent.includes("Laporan"))))}
+function setActivePage(page){
+ document.querySelectorAll(".sidebar .nav").forEach(n=>n.classList.toggle("active",n.dataset.page===page||(page==="reports"&&n.textContent.includes("Laporan"))));
+ document.querySelectorAll(".simatel-bottom-nav button").forEach((b,i)=>{const key=["dashboard","inventory","inspection","reports","profile"][i];b.classList.toggle("active",key===page)});
+}
 function renderDashboard(){
  const total=assets.length,good=assets.filter(a=>a.condition==="Baik").length,check=assets.filter(a=>a.condition==="Perlu pemeriksaan").length,broken=assets.filter(a=>a.condition==="Rusak").length,docs=assets.reduce((n,a)=>n+a.docs.length,0);
  $("dashTotal").textContent=total;$("dashGood").textContent=good;$("dashCheck").textContent=check;$("dashBroken").textContent=broken;$("dashDocs").textContent=docs;
