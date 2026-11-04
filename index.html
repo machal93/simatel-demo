@@ -1349,4 +1349,51 @@ body[data-theme="dark"] .simatel-bottom-nav button.active{color:#f0d56b}
 }
 
 </style>
+<style id="simatel-menu-profile-fix">
+@media(min-width:761px){
+ .app{grid-template-columns:244px minmax(0,1fr)!important}
+ .sidebar{width:244px!important;min-width:244px!important;display:flex!important;flex-direction:column!important;padding:22px 14px!important;position:sticky;top:0;height:100vh;overflow-y:auto}
+ .brand{justify-content:flex-start!important;padding:5px 8px 20px!important}
+ .brandtext,.navtitle,.sidebottom,.sidebar .nav span:not(.ico){display:block!important}
+ .nav{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;padding:12px 13px!important;min-height:46px}
+ .nav .ico{display:inline-flex!important;align-items:center;justify-content:center;width:25px;min-width:25px;height:25px;font-size:0!important;line-height:1}
+ .nav .ico:before{font-size:19px;font-family:"Segoe UI Symbol",Arial,sans-serif;line-height:1}
+ .nav[data-page="dashboard"] .ico:before{content:"▦"}.nav[data-page="inventory"] .ico:before{content:"▤"}
+ .nav[data-page="inspection"] .ico:before{content:"▣"}.nav[data-page="reports"] .ico:before{content:"▥"}
+ .nav span:not(.ico){font-size:13px!important;white-space:normal}
+}
+@media(max-width:760px){
+ .sidebar{display:none!important}.simatel-bottom-nav{display:grid!important}
+ .simatel-bottom-nav button{display:flex!important;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+ .simatel-bottom-nav button span{display:block!important;font-size:0!important;line-height:1;width:25px;height:23px}
+ .simatel-bottom-nav button span:before{font-family:"Segoe UI Symbol",Arial,sans-serif;font-size:21px;line-height:1}
+ .simatel-bottom-nav button:nth-child(1) span:before{content:"▦"}.simatel-bottom-nav button:nth-child(2) span:before{content:"▤"}
+ .simatel-bottom-nav button:nth-child(3) span:before{content:"▣"}.simatel-bottom-nav button:nth-child(4) span:before{content:"▥"}
+ .simatel-bottom-nav button:nth-child(5) span:before{content:"●"}
+ .simatel-bottom-nav button small{display:block!important;font-size:10px!important;line-height:1.2}
+}
+#accountModal{z-index:2000!important;padding:16px!important;background:rgba(7,35,22,.62)!important;backdrop-filter:blur(5px)}
+#accountModal .modal{width:min(540px,100%)!important;max-height:min(780px,calc(100dvh - 32px))!important;overflow:auto!important;background:var(--white,#fff)!important;color:var(--text,#18372b)!important;border:1px solid var(--line,#dce8e0)!important;border-radius:18px!important;box-shadow:0 24px 80px rgba(0,0,0,.24)!important}
+#accountModal .modalhead{position:sticky;top:0;z-index:2;display:flex!important;align-items:center!important;gap:12px!important;padding:20px 22px!important;background:var(--white,#fff)!important;border-bottom:1px solid var(--line,#dce8e0)!important}
+#accountModal .modalhead h2{font-size:19px!important;font-weight:800!important;color:var(--text,#18372b)!important;line-height:1.3}
+#accountModal .modalhead .btn{flex:0 0 auto}
+#accountModal #accountForm{display:block!important}
+#accountModal #accountForm .formgrid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:15px!important;padding:22px!important}
+#accountModal #accountForm .field,#accountModal #accountForm .field.full{display:flex!important;flex-direction:column!important;gap:7px!important;grid-column:1!important;min-width:0}
+#accountModal #accountForm .field label{display:block!important;font-size:12px!important;font-weight:750!important;color:var(--text,#18372b)!important;line-height:1.4}
+#accountModal #accountForm input{display:block!important;width:100%!important;min-width:0!important;min-height:46px!important;padding:11px 13px!important;border:1px solid var(--line,#dce8e0)!important;border-radius:10px!important;background:var(--bg,#f3f7f4)!important;color:var(--text,#18372b)!important;box-sizing:border-box!important;font-size:14px!important}
+#accountModal #accountForm input:focus{outline:0!important;border-color:#159b63!important;box-shadow:0 0 0 3px rgba(21,155,99,.14)!important}
+#accountModal #accountForm .notice{margin:0 22px 18px!important;padding:13px 15px!important;border-radius:10px!important;line-height:1.55!important;font-size:12px!important}
+#accountModal .modalfoot{position:sticky;bottom:0;z-index:2;display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:9px!important;padding:15px 22px!important;background:var(--white,#fff)!important;border-top:1px solid var(--line,#dce8e0)!important}
+#accountModal .modalfoot button{min-height:42px!important}#accountModal .modalfoot #simatelAccountLogout{margin-right:auto!important}
+body[data-theme="dark"] #accountModal .modal,body[data-theme="dark"] #accountModal .modalhead,body[data-theme="dark"] #accountModal .modalfoot{background:#14251b!important;color:#e5f1e8!important}
+body[data-theme="dark"] #accountModal .modalhead h2,body[data-theme="dark"] #accountModal #accountForm .field label{color:#e5f1e8!important}
+body[data-theme="dark"] #accountModal #accountForm input{background:#0c1711!important;color:#e5f1e8!important;border-color:#365a45!important}
+@media(max-width:480px){
+ #accountModal{padding:10px!important;align-items:center!important}
+ #accountModal .modal{width:100%!important;max-height:calc(100dvh - 20px - env(safe-area-inset-bottom))!important;border-radius:15px!important}
+ #accountModal .modalhead{padding:16px!important}#accountModal #accountForm .formgrid{padding:17px 16px!important;gap:13px!important}
+ #accountModal #accountForm .notice{margin:0 16px 15px!important}#accountModal .modalfoot{padding:13px 16px!important}
+}
+</style>
 </body></html>
