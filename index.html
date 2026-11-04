@@ -299,6 +299,13 @@ body[data-theme="dark"] .dash-card,body[data-theme="dark"] .dash-stat{background
  </div>
 </section>
 </main>
+<nav class="simatel-bottom-nav" aria-label="Navigasi utama smartphone">
+ <button type="button" onclick="showDashboard()"><span>▦</span><small>Dashboard</small></button>
+ <button type="button" onclick="showList()" class="active"><span>▤</span><small>Inventaris</small></button>
+ <button type="button" onclick="showInspection()"><span>▣</span><small>Pemeriksaan</small></button>
+ <button type="button" onclick="showReports()"><span>▥</span><small>Laporan</small></button>
+ <button type="button" onclick="openAccountSettings()"><span>●</span><small>Profil</small></button>
+</nav>
 </div>
 <div class="modalback" id="addModal"><div class="modal"><div class="modalhead"><h2>Tambah perangkat</h2><button class="btn small" onclick="closeModal('addModal')">Tutup ✕</button></div><form id="addForm"><div class="formgrid"><div class="field"><label>Kode inventaris *</label><input name="code" required placeholder="EL-2026-009"></div><div class="field"><label>Nama perangkat *</label><input name="name" required placeholder="Laptop dinas"></div><div class="field"><label>Kategori</label><select name="category"><option>Laptop & Komputer</option><option>Jaringan</option><option>Komunikasi</option><option>Dokumentasi</option><option>Periferal</option></select></div><div class="field"><label>Merek / model</label><input name="model" placeholder="Merek dan model"></div><div class="field"><label>Nomor seri</label><input name="serial" placeholder="Nomor seri"></div><div class="field"><label>Kondisi</label><select name="condition"><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select></div><div class="field"><label>Lokasi</label><input name="location" placeholder="Unit/lokasi penyimpanan"></div><div class="field"><label>Penanggung jawab</label><input name="owner" placeholder="Nama/jabatan"></div><div class="field"><label>Tanggal perolehan</label><input name="date" type="date"></div><div class="field"><label>Status</label><select name="status"><option>Tersedia</option><option>Dipinjam</option><option>Dalam pemeliharaan</option></select></div><div class="field full"><span class="tiny">Foto dan dokumen dapat ditambahkan setelah perangkat tersimpan. Data akan disimpan pada database SIMATEL.</span></div></div><div class="modalfoot"><button type="button" class="btn" onclick="closeModal('addModal')">Batal</button><button class="btn primary" type="submit">Simpan perangkat</button></div></form></div></div>
 <div class="modalback" id="editModal"><div class="modal"><div class="modalhead"><h2>Edit data perangkat</h2><button class="btn small" onclick="closeModal('editModal')">Tutup ✕</button></div><form id="editForm"><div class="formgrid"><div class="field"><label>Kode inventaris *</label><input name="code" required readonly><span class="tiny">Kode tidak dapat diubah agar referensi inventaris tetap konsisten.</span></div><div class="field"><label>Nama perangkat *</label><input name="name" required></div><div class="field"><label>Kategori</label><select name="category"></select></div><div class="field"><label>Merek / model</label><input name="model"></div><div class="field"><label>Nomor seri</label><input name="serial"></div><div class="field"><label>Kondisi</label><select name="condition"><option>Baik</option><option>Perlu pemeriksaan</option><option>Rusak</option></select></div><div class="field"><label>Lokasi</label><input name="location"></div><div class="field"><label>Penanggung jawab</label><input name="owner"></div><div class="field"><label>Tanggal perolehan</label><input name="date" type="date"></div><div class="field"><label>Status</label><select name="status"><option>Tersedia</option><option>Dipinjam</option><option>Dalam pemeliharaan</option></select></div><div class="field full"><span class="tiny">Perubahan akan disimpan ke database SIMATEL. Pastikan data sudah benar sebelum menyimpan.</span></div></div><div class="modalfoot"><button type="button" class="btn" onclick="closeModal('editModal')">Batal</button><button class="btn primary" type="submit">Simpan perubahan</button></div></form></div></div>
@@ -596,7 +603,84 @@ async function exportPDF(){
     if(!window.jspdf||!window.jspdf.jsPDF){
       const esc=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
       const rows=hierarchy.map(r=>`<tr class="${r.kind}">${r.values.map(v=>`<td>${esc(v)}</td>`).join("")}</tr>`).join("");const w=window.open("","_blank");if(!w){toast("Izinkan pop-up untuk mencetak laporan PDF.");return;}
-      w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>SIMATEL - Hierarki Inventaris</title><style>@page{size:A4 landscape;margin:10mm}*{box-sizing:border-box}body{font:9px Arial,sans-serif;color:#203047}header{background:#122239;color:white;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}h1{font-size:18px;margin:0}header p{margin:4px 0 0}main{padding:12px 0}p{font-size:9px}table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:10px}th,td{border:1px solid #d4dbe4;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere;word-break:normal}th{background:#e8edf3;font-size:8px}td{font-size:8px}.parent{background:#eaf5ee;font-weight:bold}.child td:first-child{padding-left:16px;color:#18764c}.child td:nth-child(2),.child td:nth-child(3){padding-left:10px}.orphan{background:#fff4e5}.foot{margin-top:12px;color:#667085}@media print{tr{break-inside:avoid}}</style></head><body><header><div><h1>SIMATEL</h1><p>KEJAKSAAN TINGGI KALIMANTAN TENGAH</p></div><strong>HIERARKI INVENTARIS DAN SUBKOMPONEN</strong></header><main><p>Dicetak: ${esc(new Date().toLocaleString("id-ID"))} · Perangkat induk: ${list.length} · Subkomponen: ${components.length}</p><table><colgroup><col style="width:12%"><col style="width:10%"><col style="width:15%"><col style="width:11%"><col style="width:12%"><col style="width:5%"><col style="width:8%"><col style="width:8%"><col style="width:9%"><col style="width:10%"></colgroup><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table><p class="foot">Laporan internal SIMATEL</p></main><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close();return;
+      w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>SIMATEL - Hierarki Inventaris</title><style>@page{size:A4 landscape;margin:10mm}*{box-sizing:border-box}body{font:9px Arial,sans-serif;color:#203047}header{background:#122239;color:white;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}h1{font-size:18px;margin:0}header p{margin:4px 0 0}main{padding:12px 0}p{font-size:9px}table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:10px}th,td{border:1px solid #d4dbe4;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere;word-break:normal}th{background:#e8edf3;font-size:8px}td{font-size:8px}.parent{background:#eaf5ee;font-weight:bold}.child td:first-child{padding-left:16px;color:#18764c}.child td:nth-child(2),.child td:nth-child(3){padding-left:10px}.orphan{background:#fff4e5}.foot{margin-top:12px;color:#667085}@media print{tr{break-inside:avoid}}</style></head><body><header><div><h1>SIMATEL</h1><p>KEJAKSAAN TINGGI KALIMANTAN TENGAH</p></div><strong>HIERARKI INVENTARIS DAN SUBKOMPONEN</strong></header><main><p>Dicetak: ${esc(new Date().toLocaleString("id-ID"))} · Perangkat induk: ${list.length} · Subkomponen: ${components.length}</p><table><colgroup><col style="width:12%"><col style="width:10%"><col style="width:15%"><col style="width:11%"><col style="width:12%"><col style="width:5%"><col style="width:8%"><col style="width:8%"><col style="width:9%"><col style="width:10%"></colgroup><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table><p class="foot">Laporan internal SIMATEL</p></main><script>window.onload=()=>window.print()<\/script>
+<style id="simatel-approved-responsive-ui">
+:root{--bg:#f2f6f3;--white:#fff;--navy:#174b32;--navy2:#1c6944;--gold:#258653;--text:#20352a;--muted:#718078;--line:#dfe9e2;--green:#258653;--greenbg:#e7f4eb;--blue:#258653;--bluebg:#eaf4ed}
+body{background:#f1f5f2;color:var(--text)}
+.app{grid-template-columns:82px minmax(0,1fr);max-width:none;box-shadow:none;background:#f1f5f2}
+.sidebar{background:linear-gradient(180deg,#31b77e 0%,#168653 55%,#087548 100%);color:#fff;padding:18px 10px;border:0}
+.brand{justify-content:center;padding:4px 0 18px;border-color:#ffffff35}.brandtext,.navtitle,.sidebottom{display:none}
+.crest{width:48px;height:48px;flex-basis:48px}
+.nav{justify-content:center;padding:13px 8px;color:#eafff1;border-radius:10px;margin:4px 0}.nav span:not(.ico){display:none}.nav .ico{font-size:20px}
+.nav.active,.nav:hover{background:#ffffff27;color:#fff;box-shadow:inset 0 -3px #fff;border-color:#ffffff30;transform:none}
+main{padding:20px 24px;background:#f1f5f2}
+.topbar{background:linear-gradient(105deg,#a9dfc5 0%,#32b77e 46%,#079d5c 100%);color:#103e29;border:0;border-radius:9px;padding:17px 20px;margin-bottom:18px;box-shadow:0 4px 15px #176d4320}
+.topbar h1{font-size:24px;color:#10482f;margin:3px 0}.topbar .crumb{color:#236746!important}.topright .avatar{background:#fff;color:#176b43;border:1px solid #d7f0e1}
+.gridstats{gap:12px}.stat,.card{border-radius:8px;box-shadow:0 2px 8px #173f2910;border:1px solid #e1e9e3}
+.cardhead{background:linear-gradient(100deg,#a9dfc5,#20ad70 60%,#079c5b);padding:14px 18px;border:0}
+.cardhead h2,.cardhead p{color:#103e29}.cardhead p{opacity:.8}
+.btn.primary{background:#0ba45f;border-color:#0ba45f;color:#fff}.btn{border-radius:6px}
+.filters{background:#fff;padding:14px 16px;gap:10px}.filters input,.filters select{min-height:43px;border-radius:5px;border-color:#cbd5ce}
+.tablewrap{overflow-x:auto;background:#fff}table{min-width:900px}th{background:#24ad78;color:#fff;font-size:11px;letter-spacing:0;padding:12px 13px}td{padding:10px 13px;border-top:1px solid #e4e9e5}tbody tr{background:#fff;border-bottom:0}tbody tr:hover{background:#f1f8f3}
+.asset-thumb,.asset-placeholder{width:52px;height:52px;border-radius:5px}.pill{border-radius:5px}
+.simatel-mobile-controls{display:none!important}
+.simatel-bottom-nav{display:none}
+@media(max-width:760px){
+ .app{display:block;min-height:100vh;padding-bottom:72px}
+ .sidebar{display:none!important}
+ main{padding:10px 10px 18px}
+ .topbar{position:sticky;top:0;z-index:30;padding:12px 13px;margin:0 -1px 13px;border-radius:0 0 9px 9px}
+ .topbar h1{font-size:19px}.topbar .crumb{font-size:9px}.topbar>div:first-child>div:last-child{display:none}
+ .topright{gap:5px}.topright .avatar{width:32px;height:32px}
+ .gridstats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .stat{padding:11px;min-height:0}.statnum{font-size:22px;margin:4px 0}
+ .card{margin-bottom:12px}.cardhead{padding:13px;align-items:flex-start;flex-wrap:wrap}
+ #listPage>.gridstats{display:none}
+ #listPage>.card .cardhead>div:last-child{width:100%;display:flex;flex-wrap:wrap}
+ #listPage>.card .cardhead>div:last-child .btn{flex:1}
+ #listPage .filters{display:grid;grid-template-columns:1fr 1fr;padding:11px;gap:8px}
+ #listPage .filters input{grid-column:1/-1;min-width:0;width:100%}
+ #listPage .filters select{min-width:0;width:100%}
+ #listPage .filters .btn{grid-column:1/-1}
+ #listPage .tablewrap{overflow:visible;padding:0 10px 10px}
+ #listPage .tablewrap table{min-width:0;width:100%;display:block}
+ #listPage .tablewrap thead{display:none}
+ #listPage .tablewrap tbody{display:grid;gap:10px}
+ #listPage .tablewrap tbody tr{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #e0e9e2;border-radius:9px;overflow:hidden;background:#fff}
+ #listPage .tablewrap tbody td{display:flex;align-items:center;gap:7px;padding:9px 10px;border-top:1px solid #edf1ed;min-width:0;font-size:11px;overflow-wrap:anywhere}
+ #listPage .tablewrap tbody td:first-child{grid-column:1/-1;border-top:0;padding:12px}
+ #listPage .tablewrap tbody td:nth-child(2){grid-column:1/-1}
+ #listPage .tablewrap tbody td:nth-child(2):before{content:"Kategori";font-weight:700;color:#718078;min-width:74px}
+ #listPage .tablewrap tbody td:nth-child(3):before{content:"Kondisi";font-weight:700;color:#718078;min-width:55px}
+ #listPage .tablewrap tbody td:nth-child(4):before{content:"Lokasi";font-weight:700;color:#718078;min-width:55px}
+ #listPage .tablewrap tbody td:nth-child(5):before{content:"Dokumen";font-weight:700;color:#718078;min-width:55px}
+ #listPage .tablewrap tbody td:nth-child(6):before{content:"Akun";font-weight:700;color:#718078;min-width:40px}
+ #listPage .tablewrap tbody td:nth-child(7):before{content:"Detail";font-weight:700;color:#718078;min-width:40px}
+ #listPage .tablewrap .asset-cell{min-width:0;gap:10px}
+ #listPage .tablewrap .asset-thumb,#listPage .tablewrap .asset-placeholder{width:56px;height:56px;flex-basis:56px}
+ #listPage .tablewrap tbody td:nth-child(7){grid-column:1/-1;justify-content:flex-end}
+ #listPage .footrow{padding:10px 12px;gap:8px;flex-wrap:wrap}
+ .simatel-bottom-nav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:90;padding:7px 5px calc(7px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #dfe9e2;box-shadow:0 -5px 18px #153b2410}
+ .simatel-bottom-nav button{border:0;background:transparent;color:#6d7d73;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:5px 2px;min-width:0}
+ .simatel-bottom-nav button span{font-size:19px;line-height:1.1}.simatel-bottom-nav button small{font-size:9px;font-weight:650}
+ .simatel-bottom-nav button.active,.simatel-bottom-nav button:focus{color:#168653}
+ .detailgrid{grid-template-columns:1fr}.detailhead>div:last-child{display:flex;flex-wrap:wrap}
+ .component-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+body[data-theme="dark"]{--bg:#101a15;--white:#17251d;--text:#e6f0e8;--muted:#a4b5a9;--line:#2b4033;background:#101a15}
+body[data-theme="dark"] .app,body[data-theme="dark"] main{background:#101a15;color:#e6f0e8}
+body[data-theme="dark"] .topbar{background:linear-gradient(105deg,#22583c,#16754a 55%,#075d3b);color:#fff}
+body[data-theme="dark"] .topbar h1,body[data-theme="dark"] .topbar .crumb{color:#fff!important}
+body[data-theme="dark"] .card,body[data-theme="dark"] .stat,body[data-theme="dark"] .filters,body[data-theme="dark"] .tablewrap,body[data-theme="dark"] #listPage .tablewrap tbody tr{background:#17251d;border-color:#2b4033;color:#e6f0e8}
+body[data-theme="dark"] .cardhead{background:linear-gradient(100deg,#22583c,#16754a 60%,#075d3b)}
+body[data-theme="dark"] .cardhead h2,body[data-theme="dark"] .cardhead p{color:#fff}
+body[data-theme="dark"] th{background:#16754a;color:#fff}body[data-theme="dark"] td{border-color:#2b4033}
+body[data-theme="dark"] .filters input,body[data-theme="dark"] .filters select{background:#101a15;color:#e6f0e8;border-color:#385543}
+body[data-theme="dark"] .simatel-bottom-nav{background:#17251d;border-color:#2b4033}
+body[data-theme="dark"] #listPage .tablewrap tbody td:before{color:#a4b5a9}
+</style>
+
+</body></html>`);w.document.close();return;
     }
     const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight(),stamp=new Date().toLocaleString("id-ID");
     function pageHeader(){doc.setFillColor(18,34,57);doc.rect(0,0,pageW,22,"F");doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(14);doc.text("SIMATEL",14,9);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.text("KEJAKSAAN TINGGI KALIMANTAN TENGAH",14,15);doc.setFont("helvetica","bold");doc.text("HIERARKI INVENTARIS DAN SUBKOMPONEN",pageW-14,12,{align:"right"});doc.setTextColor(70,80,95);doc.setFontSize(8);doc.text("Dicetak: "+stamp,14,28);}
