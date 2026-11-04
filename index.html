@@ -1239,5 +1239,70 @@ body[data-theme="dark"] th{background:#16754a;color:#fff}body[data-theme="dark"]
 body[data-theme="dark"] .filters input,body[data-theme="dark"] .filters select{background:#101a15;color:#e6f0e8;border-color:#385543}
 body[data-theme="dark"] .simatel-bottom-nav{background:#17251d;border-color:#2b4033}
 body[data-theme="dark"] #listPage .tablewrap tbody td:before{color:#a4b5a9}
+
+/* SIMATEL Intelligence deep-green palette */
+:root{
+ --bg:#f2f6f3;--white:#ffffff;--navy:#073d2e;--navy2:#0b513b;
+ --gold:#e5c34b;--text:#17372b;--muted:#71847a;--line:#d9e5de;
+ --green:#087653;--greenbg:#e7f1eb;--blue:#087653;--bluebg:#e7f1eb;
+ --simatel-deep:#063d2e;--simatel-deeper:#042f24;--simatel-mid:#0b6248;--simatel-accent:#0b7956;
+}
+body{background:var(--bg);color:var(--text)}
+.app,main{background:var(--bg)}
+.sidebar{
+ background:radial-gradient(ellipse at 20% 5%,#15563e 0%,transparent 46%),linear-gradient(180deg,#064532 0%,#053b2d 58%,#032f24 100%);
+ color:#f4faf6;border-right:1px solid #ffffff18;
+}
+.brand{border-color:#ffffff24}
+.nav{color:#dcebe2}
+.nav.active,.nav:hover{background:#ffffff17;color:#fff;box-shadow:inset 3px 0 #e5c34b;border-color:#ffffff1c}
+.topbar{
+ background:linear-gradient(110deg,#073d2e 0%,#07513b 58%,#0b6248 100%);
+ color:#f4faf6;border:1px solid #ffffff12;
+ box-shadow:0 5px 18px #063d2e20;
+}
+.topbar h1{color:#fff}
+.topbar .crumb{color:#c2d9cc!important}
+.topright .avatar{background:#e8f2ec;color:#07513b;border:1px solid #c7dfd1}
+.card,.stat{background:#fff;border:1px solid #dce8e0;box-shadow:0 3px 12px #103d2910}
+.cardhead{background:linear-gradient(100deg,#e9f2ec 0%,#dcebe1 100%);border-bottom:1px solid #d5e5da}
+.cardhead h2{color:#103d2d}.cardhead p{color:#60766a}
+.btn.primary{background:#087653;border-color:#087653;color:#fff}
+.btn.primary:hover{background:#065c42;border-color:#065c42}
+.filters{background:#fff}
+.filters input:focus,.filters select:focus{border-color:#0b7956;box-shadow:0 0 0 3px #0b79561c}
+th{background:#0b6248;color:#fff}
+tbody tr:hover{background:#f0f6f2}
+.pill{border-radius:6px}
+.simatel-bottom-nav{background:#063d2e;border-top:1px solid #ffffff20}
+.simatel-bottom-nav button{color:#c8ddd1}
+.simatel-bottom-nav button.active,.simatel-bottom-nav button:focus{color:#f0d56b}
+body[data-theme="dark"]{
+ --bg:#071a13;--white:#10271c;--text:#e7f1ea;--muted:#a5b9ad;--line:#294638;
+ --green:#38a879;--greenbg:#173c2c;background:#071a13;color:#e7f1ea
+}
+body[data-theme="dark"] .app,body[data-theme="dark"] main{background:#071a13;color:#e7f1ea}
+body[data-theme="dark"] .sidebar{background:linear-gradient(180deg,#052f23,#04271d);border-color:#ffffff18}
+body[data-theme="dark"] .topbar{background:linear-gradient(110deg,#052f23,#07513b 58%,#0b6248);color:#fff}
+body[data-theme="dark"] .topbar h1,body[data-theme="dark"] .topbar .crumb{color:#f4faf6!important}
+body[data-theme="dark"] .card,body[data-theme="dark"] .stat,body[data-theme="dark"] .filters,
+body[data-theme="dark"] .tablewrap,body[data-theme="dark"] #listPage .tablewrap tbody tr{
+ background:#10271c;border-color:#294638;color:#e7f1ea
+}
+body[data-theme="dark"] .cardhead{background:linear-gradient(100deg,#143b2b,#174a35);border-color:#294638}
+body[data-theme="dark"] .cardhead h2,body[data-theme="dark"] .cardhead p{color:#e7f1ea}
+body[data-theme="dark"] th{background:#0b6248;color:#fff}
+body[data-theme="dark"] td{border-color:#294638}
+body[data-theme="dark"] .filters input,body[data-theme="dark"] .filters select{background:#071a13;color:#e7f1ea;border-color:#365b46}
+body[data-theme="dark"] .simatel-bottom-nav{background:#052f23;border-color:#294638}
+body[data-theme="dark"] .simatel-bottom-nav button{color:#c8ddd1}
+body[data-theme="dark"] .simatel-bottom-nav button.active{color:#f0d56b}
+@media(max-width:760px){
+ .topbar{background:linear-gradient(110deg,#073d2e,#0b6248);color:#fff}
+ .simatel-bottom-nav{background:#063d2e}
+ .simatel-bottom-nav button.active,.simatel-bottom-nav button:focus{color:#f0d56b}
+ body[data-theme="dark"] .topbar{background:linear-gradient(110deg,#052f23,#0b6248)}
+}
+
 </style>
 </body></html>
