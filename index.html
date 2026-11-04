@@ -647,6 +647,54 @@ async function exportPDF(){
       w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>SIMATEL - Hierarki Inventaris</title><style>@page{size:A4 landscape;margin:10mm}*{box-sizing:border-box}body{font:9px Arial,sans-serif;color:#203047}header{background:#122239;color:white;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}h1{font-size:18px;margin:0}header p{margin:4px 0 0}main{padding:12px 0}p{font-size:9px}table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:10px}th,td{border:1px solid #d4dbe4;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere;word-break:normal}th{background:#e8edf3;font-size:8px}td{font-size:8px}.parent{background:#eaf5ee;font-weight:bold}.child td:first-child{padding-left:16px;color:#18764c}.child td:nth-child(2),.child td:nth-child(3){padding-left:10px}.orphan{background:#fff4e5}.foot{margin-top:12px;color:#667085}@media print{tr{break-inside:avoid}}</style></head><body><header><div><h1>SIMATEL</h1><p>KEJAKSAAN TINGGI KALIMANTAN TENGAH</p></div><strong>HIERARKI INVENTARIS DAN SUBKOMPONEN</strong></header><main><p>Dicetak: ${esc(new Date().toLocaleString("id-ID"))} · Perangkat induk: ${list.length} · Subkomponen: ${components.length}</p><table><colgroup><col style="width:12%"><col style="width:10%"><col style="width:15%"><col style="width:11%"><col style="width:12%"><col style="width:5%"><col style="width:8%"><col style="width:8%"><col style="width:9%"><col style="width:10%"></colgroup><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table><p class="foot">Laporan internal SIMATEL</p></main><script>window.onload=()=>window.print()<\/script>
 
 
+
+<style id="simatel-svg-menu-icons">
+/* Consistent line icons for desktop sidebar and mobile navigation */
+.nav .ico:before,
+.simatel-bottom-nav button span:before{
+  content:""!important;display:block;width:22px;height:22px;
+  background-color:currentColor;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
+  -webkit-mask-size:contain;mask-size:contain;
+  font-size:0!important;line-height:0!important;
+}
+.nav .ico{color:#dcefe5!important}
+.nav.active .ico{color:#f0cf54!important}
+.nav[data-page="dashboard"] .ico:before,
+.simatel-bottom-nav button:nth-child(1) span:before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='8' height='8' rx='1'/%3E%3Crect x='13' y='3' width='8' height='8' rx='1'/%3E%3Crect x='3' y='13' width='8' height='8' rx='1'/%3E%3Crect x='13' y='13' width='8' height='8' rx='1'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='8' height='8' rx='1'/%3E%3Crect x='13' y='3' width='8' height='8' rx='1'/%3E%3Crect x='3' y='13' width='8' height='8' rx='1'/%3E%3Crect x='13' y='13' width='8' height='8' rx='1'/%3E%3C/svg%3E");
+}
+.nav[data-page="inventory"] .ico:before,
+.simatel-bottom-nav button:nth-child(2) span:before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16v5H4zM4 12h16v8H4z'/%3E%3Cpath d='M8 6.5h.01M8 15h.01'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16v5H4zM4 12h16v8H4z'/%3E%3Cpath d='M8 6.5h.01M8 15h.01'/%3E%3C/svg%3E");
+}
+.nav[data-page="inspection"] .ico:before,
+.simatel-bottom-nav button:nth-child(3) span:before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v6h-6v-2'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v6h-6v-2'/%3E%3C/svg%3E");
+}
+.nav[data-page="reports"] .ico:before,
+.simatel-bottom-nav button:nth-child(4) span:before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19V5M4 19h17'/%3E%3Crect x='7' y='11' width='3' height='6' rx='.5'/%3E%3Crect x='13' y='7' width='3' height='10' rx='.5'/%3E%3Crect x='19' y='3' width='2' height='14' rx='.5'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19V5M4 19h17'/%3E%3Crect x='7' y='11' width='3' height='6' rx='.5'/%3E%3Crect x='13' y='7' width='3' height='10' rx='.5'/%3E%3Crect x='19' y='3' width='2' height='14' rx='.5'/%3E%3C/svg%3E");
+}
+.simatel-bottom-nav button:nth-child(5) span:before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21a8 8 0 0 1 16 0'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21a8 8 0 0 1 16 0'/%3E%3C/svg%3E");
+}
+.simatel-bottom-nav button span{display:grid!important;place-items:center;width:26px!important;height:25px!important;font-size:0!important}
+.simatel-bottom-nav button span:before{width:21px;height:21px}
+.simatel-bottom-nav button{color:#e0f2e8!important}
+.simatel-bottom-nav button.active{color:#f4d46b!important}
+@media(min-width:761px){
+ .nav .ico:before{width:22px;height:22px}
+ .nav.active .ico{color:#f0cf54!important}
+}
+</style>
+
 </body></html>`);w.document.close();return;
     }
     const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight(),stamp=new Date().toLocaleString("id-ID");
